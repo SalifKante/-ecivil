@@ -1,7 +1,7 @@
 import { verifyAccessToken } from '../utils/jwt.js';
 import { ApiError } from '../utils/ApiError.js';
 
-/** Populates req.auth = { id, role, nina } or rejects with 401. */
+/** Populates req.auth = { id, role, nina, moduleScope } or rejects with 401. */
 export function requireAuth(req, res, next) {
   const header = req.headers.authorization ?? '';
   const [scheme, token] = header.split(' ');
@@ -12,7 +12,12 @@ export function requireAuth(req, res, next) {
 
   try {
     const payload = verifyAccessToken(token);
-    req.auth = { id: payload.sub, role: payload.role, nina: payload.nina };
+    req.auth = {
+      id: payload.sub,
+      role: payload.role,
+      nina: payload.nina,
+      moduleScope: payload.moduleScope ?? [],
+    };
     next();
   } catch (err) {
     const code = err.name === 'TokenExpiredError' ? 'TOKEN_EXPIRED' : 'INVALID_TOKEN';

@@ -73,6 +73,22 @@ export const components = {
         consulate: { type: 'string', nullable: true },
       },
     },
+    StaffUser: {
+      type: 'object',
+      description: 'A back-office account. Never carries the password hash.',
+      properties: {
+        id: { type: 'string' },
+        email: { type: 'string', format: 'email', example: 'agent.etatcivil@ecivil.demo' },
+        fullName: { type: 'string', example: 'Agent Événements de Vie' },
+        role: { type: 'string', enum: [ROLES.AGENT, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
+        moduleScope: {
+          type: 'array',
+          items: { type: 'string', enum: Object.values(MODULE_KEYS) },
+          description: 'Modules this account may act on. Empty + SUPER_ADMIN means global.',
+        },
+        lastLoginAt: { type: 'string', format: 'date-time', nullable: true },
+      },
+    },
     Service: {
       type: 'object',
       properties: {
@@ -193,6 +209,10 @@ export const components = {
     },
     Unauthorized: {
       description: 'Missing or invalid session token',
+      content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+    },
+    Forbidden: {
+      description: 'Authenticated, but the role or module scope does not allow this',
       content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
     },
     NotFound: {

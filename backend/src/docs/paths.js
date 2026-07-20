@@ -167,6 +167,76 @@ export const paths = {
     },
   },
 
+  '/api/v1/staff/auth/login': {
+    post: {
+      tags: ['Back-office'],
+      summary: 'Back-office login (email + password)',
+      description:
+        'Staff front door. Citizens authenticate separately with NINA + OTP. The token ' +
+        'carries the role and moduleScope used for authorization. Unknown email, wrong ' +
+        'password and deactivated account all return the same 401 so staff emails cannot ' +
+        'be enumerated. Rate limited per IP+email.',
+      security: [],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['email', 'password'],
+              properties: {
+                email: { type: 'string', format: 'email', example: 'agent.etatcivil@ecivil.demo' },
+                password: { type: 'string', format: 'password', example: 'Demo!Agent2' },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Session issued',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  token: { type: 'string', description: 'JWT bearer token' },
+                  user: { $ref: '#/components/schemas/StaffUser' },
+                },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { description: 'Incorrect email or password', content: jsonError },
+        429: { description: 'Too many attempts', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/auth/me': {
+    get: {
+      tags: ['Back-office'],
+      summary: 'The authenticated staff profile',
+      description: 'Re-reads the account, so a deactivation takes effect immediately.',
+      responses: {
+        200: {
+          description: 'Staff profile',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { user: { $ref: '#/components/schemas/StaffUser' } },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+  },
+
   '/api/v1/services/modules': {
     get: {
       tags: ['Services'],

@@ -23,6 +23,7 @@ export const openapiSpec = {
     { name: 'Services', description: 'Public service catalog (four modules)' },
     { name: 'Requests', description: 'Citizen request lifecycle (auth required)' },
     { name: 'Payments', description: 'Mock mobile money and card payments (auth required)' },
+    { name: 'Back-office', description: 'Staff authentication and request review (RBAC)' },
   ],
   // Applied by default; endpoints that are public override with `security: []`.
   security: [{ bearerAuth: [] }],
