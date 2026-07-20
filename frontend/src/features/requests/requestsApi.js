@@ -39,3 +39,9 @@ export async function uploadAttachment(id, file, label) {
 export async function deleteAttachment(id, attachmentId) {
   await apiClient.delete(`/requests/${id}/attachments/${attachmentId}`);
 }
+
+/** Short-lived link to the issued document. Fetched on click, never stored. */
+export async function fetchDocumentUrl(id) {
+  const { data } = await apiClient.get(`/requests/${id}/document`);
+  return data.url;
+}

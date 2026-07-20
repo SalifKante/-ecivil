@@ -203,6 +203,55 @@
     "REQUEST_NOT_FOUND": "Demande introuvable.",
     "DECLINED": "Le paiement a été refusé. Vous pouvez réessayer avec un autre moyen de paiement."
   },
+  "tracking": {
+    "title": "Suivi de mes démarches",
+    "subtitle": "L'état de chacune de vos demandes, de la plus récente à la plus ancienne.",
+    "empty": "Vous n'avez pas encore de démarche en cours.",
+    "justSubmitted": "Votre demande {{reference}} a bien été enregistrée.",
+    "notFound": "Cette demande est introuvable.",
+    "backToList": "Retour à mes démarches",
+    "summary": "Récapitulatif",
+    "submittedAt": "Déposée le",
+    "indicative": "Délai indicatif",
+    "specimenNotice": "Document de démonstration : spécimen filigrané, sans valeur légale.",
+    "deliveryNote": "Le mode de réception est choisi lors du dépôt de la demande. Pour le modifier, contactez le service instructeur.",
+    "next": {
+      "pendingPayment": "Votre demande est en attente de paiement.",
+      "payNow": "Régler maintenant",
+      "inProgress": "Votre demande suit son cours. Vous serez notifié à chaque étape par SMS.",
+      "approved": "Votre demande est approuvée. Votre document sera disponible sous peu.",
+      "issued": "Votre document est disponible.",
+      "download": "Télécharger le document",
+      "needsInfo": "Un complément d'information est nécessaire pour instruire votre dossier.",
+      "needsInfoHint": "Prototype : la reprise d'un dossier incomplet n'est pas encore disponible en ligne. Rapprochez-vous du service instructeur.",
+      "rejected": "Votre demande a été rejetée."
+    }
+  },
+  "documentErrors": {
+    "DOCUMENT_NOT_FOUND": "Aucun document disponible pour cette demande.",
+    "DOCUMENT_REVOKED": "Ce document a été révoqué et n'est plus téléchargeable."
+  },
+  "verify": {
+    "title": "Vérifier un document",
+    "subtitle": "Scannez le QR Code du document ou saisissez son code.",
+    "tokenLabel": "Code de vérification",
+    "tokenPlaceholder": "Collez ici le code du document",
+    "tokenHelp": "Ce code figure sous le QR Code, en bas du document.",
+    "submit": "Vérifier",
+    "checking": "Vérification en cours…",
+    "valid": "Document authentique",
+    "invalid": "Document non reconnu",
+    "module": "Pôle émetteur",
+    "holder": "Titulaire",
+    "issuedAt": "Émis le",
+    "checkAnother": "Vérifier un autre document",
+    "privacyNote": "Par protection de la vie privée, seules l'initiale du nom et les informations strictement nécessaires sont affichées.",
+    "reasons": {
+      "VALID": "Ce document correspond bien à un enregistrement de la plateforme.",
+      "UNKNOWN_TOKEN": "Aucun document ne correspond à ce code. Vérifiez votre saisie.",
+      "REVOKED": "Ce document a été révoqué par l'administration émettrice."
+    }
+  },
   "status": {
     "DRAFT": "Brouillon",
     "SUBMITTED": "Soumise",

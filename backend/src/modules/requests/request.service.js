@@ -60,13 +60,24 @@ export async function updateDraft({ requestId, citizenId, formData, delivery }) 
 }
 
 /**
- * Submit: DRAFT (or NEEDS_INFO) → SUBMITTED, then automatically to PENDING_PAYMENT
- * with the amount due carried from the service fee. A free service settles straight
- * through to PAID — see below.
+ * Submit: DRAFT → SUBMITTED, then automatically to PENDING_PAYMENT with the amount
+ * due carried from the service fee. A free service settles straight through to PAID.
+ *
+ * DRAFT only, deliberately. The state machine also permits NEEDS_INFO → SUBMITTED,
+ * but a request in NEEDS_INFO has already been paid, and this function's next step
+ * is always PENDING_PAYMENT — so resubmitting through here would ask the citizen to
+ * pay a second time for the same request. Completing a NEEDS_INFO file needs its own
+ * path that preserves the settled payment; until that exists, the door stays shut.
  */
 export async function submitRequest({ requestId, citizenId }) {
   const request = await getOwnedRequest(requestId, citizenId);
   const actor = { id: citizenId, role: ROLES.CITIZEN };
+
+  if (request.status !== REQUEST_STATUS.DRAFT) {
+    throw ApiError.conflict('NOT_SUBMITTABLE', 'Only a draft request can be submitted', {
+      status: request.status,
+    });
+  }
 
   applyTransition(request, REQUEST_STATUS.SUBMITTED, { actor, note: 'Submitted by citizen' });
   request.submittedAt = new Date();

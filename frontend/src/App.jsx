@@ -7,8 +7,10 @@ import DashboardPage from './pages/DashboardPage';
 import ServicesPage from './pages/ServicesPage';
 import RequestWizardPage from './pages/RequestWizardPage';
 import PaymentPage from './pages/PaymentPage';
-import PlaceholderPage from './pages/PlaceholderPage';
 import NotFoundPage from './pages/NotFoundPage';
+import TrackingPage from './pages/TrackingPage';
+import RequestTrackingPage from './pages/RequestTrackingPage';
+import VerifyPage from './pages/VerifyPage';
 import StaffRoute from './components/StaffRoute';
 import AdminLayout from './admin/AdminLayout';
 import StaffLoginPage from './admin/StaffLoginPage';
@@ -46,8 +48,27 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="suivi" element={<PlaceholderPage titleKey="nav.tracking" phase="Phase 5" />} />
-        <Route path="verifier" element={<PlaceholderPage titleKey="nav.verify" phase="Phase 5" />} />
+        <Route
+          path="suivi"
+          element={
+            <ProtectedRoute>
+              <TrackingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="suivi/:id"
+          element={
+            <ProtectedRoute>
+              <RequestTrackingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Public on purpose: a QR code is scanned by whoever is handed the
+            document, who has no reason to hold an eCivil account. */}
+        <Route path="verifier" element={<VerifyPage />} />
+        <Route path="verifier/:token" element={<VerifyPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 

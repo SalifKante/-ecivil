@@ -101,6 +101,28 @@ describe('submit lifecycle', () => {
     ]);
   });
 
+  it('refuses to resubmit a NEEDS_INFO request, which would charge the citizen twice', async () => {
+    const { body } = await createDraft();
+    await request(app).post(`/api/v1/requests/${body.request._id}/submit`).set(auth(tokenA));
+
+    // Walk it to NEEDS_INFO, where the request has already been paid for.
+    await Request.updateOne(
+      { _id: body.request._id },
+      { status: REQUEST_STATUS.NEEDS_INFO },
+    );
+
+    const res = await request(app)
+      .post(`/api/v1/requests/${body.request._id}/submit`)
+      .set(auth(tokenA));
+
+    expect(res.status).toBe(409);
+    expect(res.body.error.code).toBe('NOT_SUBMITTABLE');
+
+    // And it did not slide back into PENDING_PAYMENT.
+    const after = await Request.findById(body.request._id).lean();
+    expect(after.status).toBe(REQUEST_STATUS.NEEDS_INFO);
+  });
+
   it('cannot submit an already-submitted request', async () => {
     const { body } = await createDraft();
     await request(app).post(`/api/v1/requests/${body.request._id}/submit`).set(auth(tokenA));
@@ -110,7 +132,9 @@ describe('submit lifecycle', () => {
       .set(auth(tokenA));
 
     expect(again.status).toBe(409);
-    expect(again.body.error.code).toBe('INVALID_TRANSITION');
+    // The submit guard answers before the state machine does, and says something
+    // more specific than "illegal transition".
+    expect(again.body.error.code).toBe('NOT_SUBMITTABLE');
   });
 
   it('cannot edit a request once it leaves draft', async () => {
