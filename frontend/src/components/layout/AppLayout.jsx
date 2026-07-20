@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PrototypeBanner from './PrototypeBanner';
+import DemoModeBanner from '../DemoModeBanner';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -21,6 +22,7 @@ export default function AppLayout() {
       </a>
 
       <PrototypeBanner />
+      <DemoModeBanner />
       <Header />
       <main id="contenu" tabIndex={-1} className="flex-1">
         <Outlet />

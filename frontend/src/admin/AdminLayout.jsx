@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Landmark, Inbox, LogOut, ShieldCheck, BarChart3, Users, Tags } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthContext';
 import { MODULE_META } from '../lib/format';
+import DemoModeBanner from '../components/DemoModeBanner';
+import { MaliStripe } from '../components/MaliFlag';
 
 /** Visually distinct from the citizen site, so staff always know where they are. */
 export default function AdminLayout() {
@@ -82,6 +84,9 @@ export default function AdminLayout() {
           </div>
         </nav>
       </header>
+
+      <MaliStripe />
+      <DemoModeBanner />
 
       <p className="bg-ecivil-gold-100 text-ecivil-gold-700 px-4 py-2 text-center text-xs">
         <ShieldCheck className="mr-1 inline size-3.5" aria-hidden="true" />

@@ -12,6 +12,13 @@
     "banner": "Prototype de démonstration — données fictives, aucune valeur légale.",
     "label": "Avertissement"
   },
+  "demo": {
+    "title": "Démonstration hors ligne — aucun serveur n'est connecté.",
+    "description": "Les données sont pré-enregistrées dans le navigateur. Les règles de sécurité (machine à états, habilitations, paiements) s'exécutent côté serveur dans la vraie application et ne sont donc pas actives ici.",
+    "citizen": "Citoyen :",
+    "staff": "Agent :",
+    "dismiss": "Masquer ce bandeau"
+  },
   "nav": {
     "home": "Accueil",
     "services": "Services",
@@ -27,7 +34,53 @@
     "title": "Vos démarches administratives, en ligne",
     "subtitle": "Demandez, payez et recevez vos documents officiels depuis chez vous, partout dans le monde, grâce à votre numéro NINA.",
     "cta": "Commencer une démarche",
+    "verifyCta": "Vérifier un document",
+    "discover": "Découvrir",
+    "figures": {
+      "modules": { "value": "4", "label": "Pôles de services" },
+      "services": { "value": "10", "label": "Démarches disponibles" },
+      "availability": { "value": "24h/24", "label": "Accessible en ligne" },
+      "delay": { "value": "0", "label": "Déplacement requis" }
+    },
+    "stepsTitle": "Comment ça marche",
+    "stepsSubtitle": "Quatre étapes, du dépôt de votre demande à la réception de votre document.",
+    "stepLabel": "Étape {{number}}",
+    "steps": {
+      "identify": {
+        "title": "Identifiez-vous",
+        "description": "Votre numéro NINA et un code reçu par SMS suffisent à ouvrir votre espace sécurisé."
+      },
+      "pay": {
+        "title": "Payez en ligne",
+        "description": "Orange Money, Wave ou carte bancaire. Le tarif officiel est affiché avant tout engagement."
+      },
+      "track": {
+        "title": "Suivez l'instruction",
+        "description": "Chaque étape est horodatée et vous êtes notifié par SMS à chaque changement."
+      },
+      "receive": {
+        "title": "Recevez votre document",
+        "description": "Un document numérique signé par QR Code, vérifiable par toute administration."
+      }
+    },
+    "diaspora": {
+      "eyebrow": "Diaspora & mobilité",
+      "title": "Où que vous soyez, votre administration vous suit",
+      "description": "Depuis Bamako, Paris ou New York, les mêmes démarches, les mêmes tarifs et les mêmes délais. Votre consulat de rattachement reçoit automatiquement votre dossier.",
+      "imageAlt": "Une citoyenne consulte ses démarches sur son téléphone",
+      "points": {
+        "anywhere": "Déposez et suivez vos demandes depuis n'importe quel pays.",
+        "consulate": "Les dossiers de la diaspora sont routés vers le consulat de rattachement.",
+        "sameTariff": "Tarifs officiels identiques, sans intermédiaire ni frais informel."
+      }
+    },
+    "motto": {
+      "text": "Un Peuple — Un But — Une Foi",
+      "flagAlt": "Drapeau du Mali",
+      "description": "eCivil met la devise de la République en pratique : un service unique, accessible à tous les Maliens, sur tout le territoire et au-delà."
+    },
     "modulesTitle": "Nos quatre pôles de services",
+    "modulesSubtitle": "Chaque pôle est opéré par l'administration partenaire qui en a la charge.",
     "benefits": {
       "zeroTravel": {
         "title": "Zéro déplacement",

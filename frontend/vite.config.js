@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
 export default defineConfig({
+  // GitHub Pages serves from /<repo>/, not the domain root. Set VITE_BASE at build
+  // time (the Pages workflow does); local dev and any root-hosted deploy stay '/'.
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: { '@': path.resolve(import.meta.dirname, './src') },
