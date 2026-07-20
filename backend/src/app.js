@@ -10,6 +10,7 @@ import servicesRoutes from './modules/services/services.routes.js';
 import requestRoutes from './modules/requests/request.routes.js';
 import paymentRoutes from './modules/payments/payment.routes.js';
 import staffAuthRoutes from './modules/staffAuth/staffAuth.routes.js';
+import staffRequestRoutes from './modules/staffRequests/staffRequest.routes.js';
 import docsRoutes from './docs/docs.routes.js';
 
 export function createApp() {
@@ -57,7 +58,11 @@ export function createApp() {
 
   app.use('/api/v1', authRoutes);
   app.use('/api/v1', servicesRoutes);
-  app.use('/api/v1', staffAuthRoutes);
+  // Back-office. Mounted on their own prefix so their staff-only guard applies to
+  // /staff/* alone — on the bare /api/v1 it would 403 every citizen request that
+  // reached it.
+  app.use('/api/v1/staff', staffAuthRoutes);
+  app.use('/api/v1/staff', staffRequestRoutes);
 
   // ORDER MATTERS: the citizen routers below apply `requireAuth` + CITIZEN via a
   // pathless router.use, which runs for every /api/v1 request that reaches them.

@@ -30,7 +30,8 @@ const loginLimiter = rateLimit({
 
 const router = Router();
 
-router.post('/staff/auth/login', loginLimiter, validate(staffLoginSchema), controller.login);
-router.get('/staff/auth/me', requireAuth, requireStaff, controller.me);
+// Mounted under /api/v1/staff — paths here are relative to that prefix.
+router.post('/auth/login', loginLimiter, validate(staffLoginSchema), controller.login);
+router.get('/auth/me', requireAuth, requireStaff, controller.me);
 
 export default router;

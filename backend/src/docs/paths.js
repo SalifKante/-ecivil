@@ -1,4 +1,4 @@
-import { MODULE_KEYS, PAYMENT_OUTCOMES } from '../constants/index.js';
+import { MODULE_KEYS, PAYMENT_OUTCOMES, REQUEST_STATUS } from '../constants/index.js';
 
 const errorRef = { $ref: '#/components/schemas/Error' };
 const jsonError = { 'application/json': { schema: errorRef } };
@@ -233,6 +233,257 @@ export const paths = {
         },
         401: { $ref: '#/components/responses/Unauthorized' },
         403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests': {
+    get: {
+      tags: ['Back-office'],
+      summary: 'Agent inbox — requests visible to the caller',
+      description:
+        'Scoped to the caller moduleScope; SUPER_ADMIN sees every module. Citizen drafts ' +
+        'are never listed. A `moduleKey` filter narrows within the scope and can never ' +
+        'widen it — asking for another module returns 403.',
+      parameters: [
+        {
+          name: 'status',
+          in: 'query',
+          schema: { type: 'string', enum: Object.values(REQUEST_STATUS) },
+        },
+        {
+          name: 'moduleKey',
+          in: 'query',
+          schema: { type: 'string', enum: Object.values(MODULE_KEYS) },
+        },
+        {
+          name: 'q',
+          in: 'query',
+          schema: { type: 'string' },
+          description: 'Reference lookup, e.g. ECV-2026-000042.',
+        },
+        { name: 'assigned', in: 'query', schema: { type: 'string', enum: ['me', 'unassigned'] } },
+        { name: 'page', in: 'query', schema: { type: 'integer', minimum: 1, default: 1 } },
+        {
+          name: 'limit',
+          in: 'query',
+          schema: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Paginated inbox',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  requests: { type: 'array', items: { $ref: '#/components/schemas/Request' } },
+                  total: { type: 'integer' },
+                  page: { type: 'integer' },
+                  limit: { type: 'integer' },
+                  pages: { type: 'integer' },
+                },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}': {
+    get: {
+      tags: ['Back-office'],
+      summary: 'Full request file, with citizen and service detail',
+      description:
+        'Out-of-scope requests return 404 rather than 403, so an agent cannot learn that a ' +
+        'request exists in another module. The read is recorded in the audit log.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      responses: {
+        200: {
+          description: 'Request file',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { request: { $ref: '#/components/schemas/Request' } },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        404: { $ref: '#/components/responses/NotFound' },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}/assign': {
+    post: {
+      tags: ['Back-office'],
+      summary: 'Take a request',
+      description:
+        'Assigns it to the caller and moves PAID -> UNDER_REVIEW. An AGENT cannot take a ' +
+        'request another agent already holds; ADMIN and SUPER_ADMIN may reassign.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      responses: {
+        200: {
+          description: 'Request taken',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { request: { $ref: '#/components/schemas/Request' } },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        404: { $ref: '#/components/responses/NotFound' },
+        409: { description: 'Another agent holds this request', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}/approve': {
+    post: {
+      tags: ['Back-office'],
+      summary: 'Approve a request under review',
+      description:
+        'Requires UNDER_REVIEW and that the caller holds the request (ADMIN and SUPER_ADMIN ' +
+        'are exempt). UNDER_REVIEW -> APPROVED.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      requestBody: {
+        required: false,
+        content: {
+          'application/json': {
+            schema: { type: 'object', properties: { note: { type: 'string', maxLength: 500 } } },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Approved',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { request: { $ref: '#/components/schemas/Request' } },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { description: 'Assigned to another agent', content: jsonError },
+        404: { $ref: '#/components/responses/NotFound' },
+        409: { description: 'Not under review', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}/reject': {
+    post: {
+      tags: ['Back-office'],
+      summary: 'Reject a request under review',
+      description: 'The reason is stored on the request and shown to the citizen.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['reason'],
+              properties: {
+                reason: { type: 'string', minLength: 10, maxLength: 500 },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Rejected',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { request: { $ref: '#/components/schemas/Request' } },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { description: 'Assigned to another agent', content: jsonError },
+        404: { $ref: '#/components/responses/NotFound' },
+        409: { description: 'Not under review', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}/request-info': {
+    post: {
+      tags: ['Back-office'],
+      summary: 'Ask the citizen for more information',
+      description: 'UNDER_REVIEW -> NEEDS_INFO. The citizen can then resubmit.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['note'],
+              properties: { note: { type: 'string', minLength: 10, maxLength: 500 } },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Sent back to the citizen',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { request: { $ref: '#/components/schemas/Request' } },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { description: 'Assigned to another agent', content: jsonError },
+        404: { $ref: '#/components/responses/NotFound' },
+        409: { description: 'Not under review', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}/attachments/{attachmentId}/url': {
+    get: {
+      tags: ['Back-office'],
+      summary: 'Short-lived link to a supporting document',
+      description: 'Recorded in the audit log — reading citizen documents is a privileged act.',
+      parameters: [
+        { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+        { name: 'attachmentId', in: 'path', required: true, schema: { type: 'string' } },
+      ],
+      responses: {
+        200: {
+          description: 'Presigned URL',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { url: { type: 'string', format: 'uri' } } },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        404: { $ref: '#/components/responses/NotFound' },
       },
     },
   },
