@@ -1,4 +1,4 @@
-name: Deploy demo to GitHub Pages
+﻿name: Deploy demo to GitHub Pages
 
 # Publishes the frontend as a standalone demo with no backend: requests are served
 # by the seeded demo adapter (frontend/src/demo). Nothing here touches the API,
@@ -26,9 +26,12 @@ jobs:
         working-directory: frontend
 
     steps:
-      - uses: actions/checkout@v4
+      # v4 of these actions runs on the Node 20 runtime, which the runners now
+      # force to 24 and warn about. The warning is cosmetic, but it is noise in
+      # every log, so stay on the current majors.
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           # Vite 8, Rolldown, oxlint and plugin-react all require
           # ^20.19.0 || >=22.12.0. Node 20 only satisfies that on its very last
@@ -56,7 +59,7 @@ jobs:
         # router instead.
         run: cp dist/index.html dist/404.html
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: frontend/dist
 
@@ -72,4 +75,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
