@@ -29,6 +29,10 @@ const envSchema = z.object({
   MINIO_BUCKET: z.string().default('ecivil-documents'),
   MINIO_URL_TTL_SECONDS: z.coerce.number().int().positive().default(300),
 
+  // Public base URL of the citizen site. Embedded in document QR codes, so a
+  // scanned code resolves to the verification page rather than to the API.
+  APP_PUBLIC_URL: z.string().url().default('http://localhost:5173'),
+
   // API docs. On by default; a real deployment would gate or disable this.
   DOCS_ENABLED: z
     .enum(['true', 'false'])

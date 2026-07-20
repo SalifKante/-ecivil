@@ -201,6 +201,59 @@ export const components = {
         createdAt: { type: 'string', format: 'date-time' },
       },
     },
+    Document: {
+      type: 'object',
+      description:
+        'An issued demo document. Always a watermarked SPÉCIMEN with no legal value.',
+      properties: {
+        _id: { type: 'string' },
+        requestId: { type: 'string' },
+        citizenId: { type: 'string' },
+        type: { type: 'string', example: 'LE-BIRTH-EXTRACT' },
+        storageKey: {
+          type: 'string',
+          description: 'Private object key. Reads go through a presigned URL.',
+          example: 'documents/6a58.../b69c-....pdf',
+        },
+        qrToken: {
+          type: 'string',
+          description: '32 random bytes, base64url. Encoded in the QR code.',
+        },
+        issuedAt: { type: 'string', format: 'date-time' },
+        isRevoked: { type: 'boolean' },
+      },
+    },
+    VerificationResult: {
+      type: 'object',
+      description:
+        'Public verification payload. Deliberately minimal — a scanned QR code must ' +
+        'not become an identity-lookup oracle.',
+      properties: {
+        valid: { type: 'boolean' },
+        reason: {
+          type: 'string',
+          nullable: true,
+          enum: ['UNKNOWN_TOKEN', 'REVOKED', null],
+        },
+        document: {
+          type: 'object',
+          nullable: true,
+          properties: {
+            type: { type: 'string' },
+            reference: { type: 'string', example: 'ECV-2026-000042' },
+            moduleKey: { type: 'string', enum: Object.values(MODULE_KEYS) },
+            issuedAt: { type: 'string', format: 'date-time' },
+            holder: {
+              type: 'string',
+              nullable: true,
+              description: 'First name + last initial only.',
+              example: 'Aminata T.',
+            },
+          },
+        },
+        disclaimer: { type: 'string', description: 'Always present, valid or not.' },
+      },
+    },
   },
   responses: {
     ValidationError: {

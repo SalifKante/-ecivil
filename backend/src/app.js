@@ -11,6 +11,11 @@ import requestRoutes from './modules/requests/request.routes.js';
 import paymentRoutes from './modules/payments/payment.routes.js';
 import staffAuthRoutes from './modules/staffAuth/staffAuth.routes.js';
 import staffRequestRoutes from './modules/staffRequests/staffRequest.routes.js';
+import {
+  publicDocumentRoutes,
+  staffDocumentRoutes,
+  citizenDocumentRoutes,
+} from './modules/documents/document.routes.js';
 import docsRoutes from './docs/docs.routes.js';
 
 export function createApp() {
@@ -58,17 +63,21 @@ export function createApp() {
 
   app.use('/api/v1', authRoutes);
   app.use('/api/v1', servicesRoutes);
+  // Public QR verification — must stay above the authenticated routers below.
+  app.use('/api/v1', publicDocumentRoutes);
   // Back-office. Mounted on their own prefix so their staff-only guard applies to
   // /staff/* alone — on the bare /api/v1 it would 403 every citizen request that
   // reached it.
   app.use('/api/v1/staff', staffAuthRoutes);
   app.use('/api/v1/staff', staffRequestRoutes);
+  app.use('/api/v1/staff', staffDocumentRoutes);
 
   // ORDER MATTERS: the citizen routers below apply `requireAuth` + CITIZEN via a
   // pathless router.use, which runs for every /api/v1 request that reaches them.
   // Anything public, or for staff, must be mounted ABOVE this line or it will 401.
   app.use('/api/v1', requestRoutes);
   app.use('/api/v1', paymentRoutes);
+  app.use('/api/v1', citizenDocumentRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

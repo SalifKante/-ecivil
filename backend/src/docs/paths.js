@@ -237,6 +237,84 @@ export const paths = {
     },
   },
 
+  '/api/v1/verify/{qrToken}': {
+    get: {
+      tags: ['Documents'],
+      summary: 'Public verification of a document by its QR token',
+      description:
+        'No authentication — anyone holding the document can check it. Returns whether ' +
+        'it is valid, what it is, and when it was issued, plus the prototype disclaimer ' +
+        '(present whether or not the token is known). Never returns the full identity of ' +
+        'the holder. Rate limited.',
+      security: [],
+      parameters: [{ name: 'qrToken', in: 'path', required: true, schema: { type: 'string' } }],
+      responses: {
+        200: {
+          description: 'Verification result. An unknown token is a 200 with valid=false.',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/VerificationResult' },
+            },
+          },
+        },
+        429: { description: 'Too many verification attempts', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/requests/{id}/issue': {
+    post: {
+      tags: ['Documents'],
+      summary: 'Issue the demo document for an approved request',
+      description:
+        'Renders a watermarked SPÉCIMEN PDF with a QR code, stores it privately, and moves ' +
+        'APPROVED -> ISSUED. Separate from approving on purpose: a decision must not fail ' +
+        'because object storage is briefly unavailable. Issuing twice is refused so an ' +
+        'already-distributed QR code stays valid.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      responses: {
+        201: {
+          description: 'Document issued',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  document: { $ref: '#/components/schemas/Document' },
+                  request: { $ref: '#/components/schemas/Request' },
+                },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        404: { $ref: '#/components/responses/NotFound' },
+        409: { description: 'Already issued, or the request is not approved', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/requests/{id}/document': {
+    get: {
+      tags: ['Documents'],
+      summary: 'Short-lived download link for the citizen own document',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      responses: {
+        200: {
+          description: 'Presigned URL',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { url: { type: 'string', format: 'uri' } } },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        404: { description: 'No document, or not owned by the caller', content: jsonError },
+        409: { description: 'Document revoked', content: jsonError },
+      },
+    },
+  },
+
   '/api/v1/staff/requests': {
     get: {
       tags: ['Back-office'],
