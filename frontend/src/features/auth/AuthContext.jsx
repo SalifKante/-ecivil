@@ -10,20 +10,28 @@ const AuthContext = createContext(null);
  * short-lived access token plus refresh rotation. Tracked in CLAUDE.md §6 "Later".
  */
 const TOKEN_KEY = 'ecivil.token';
-const CITIZEN_KEY = 'ecivil.citizen';
+const PRINCIPAL_KEY = 'ecivil.principal';
 
-function readStoredCitizen() {
+const CITIZEN = 'CITIZEN';
+const STAFF_ROLES = ['AGENT', 'ADMIN', 'SUPER_ADMIN'];
+
+function readStoredPrincipal() {
   try {
-    const raw = localStorage.getItem(CITIZEN_KEY);
+    const raw = localStorage.getItem(PRINCIPAL_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
+/**
+ * One session at a time, for either kind of principal: a citizen (NINA + OTP) or a
+ * back-office user (email + password). `role` is what the UI gates on — and only
+ * the UI. Every route re-authorizes server-side; this hides screens, nothing more.
+ */
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
-  const [citizen, setCitizen] = useState(readStoredCitizen);
+  const [principal, setPrincipal] = useState(readStoredPrincipal);
 
   // Keep the Authorization header in step with the token.
   useEffect(() => {
@@ -33,17 +41,29 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(CITIZEN_KEY);
+    localStorage.removeItem(PRINCIPAL_KEY);
     setToken(null);
-    setCitizen(null);
+    setPrincipal(null);
   }, []);
 
-  const login = useCallback(({ token: nextToken, citizen: nextCitizen }) => {
+  const startSession = useCallback((nextToken, nextPrincipal) => {
     localStorage.setItem(TOKEN_KEY, nextToken);
-    localStorage.setItem(CITIZEN_KEY, JSON.stringify(nextCitizen));
+    localStorage.setItem(PRINCIPAL_KEY, JSON.stringify(nextPrincipal));
     setToken(nextToken);
-    setCitizen(nextCitizen);
+    setPrincipal(nextPrincipal);
   }, []);
+
+  /** Citizen session, from NINA + OTP verification. */
+  const login = useCallback(
+    ({ token: nextToken, citizen }) => startSession(nextToken, { ...citizen, role: CITIZEN }),
+    [startSession],
+  );
+
+  /** Back-office session. The role comes from the server, never from the client. */
+  const loginStaff = useCallback(
+    ({ token: nextToken, user }) => startSession(nextToken, user),
+    [startSession],
+  );
 
   // A rejected token means the session is over — drop it rather than loop on 401s.
   useEffect(() => {
@@ -57,10 +77,26 @@ export function AuthProvider({ children }) {
     return () => apiClient.interceptors.response.eject(interceptor);
   }, [logout]);
 
-  const value = useMemo(
-    () => ({ token, citizen, isAuthenticated: Boolean(token), login, logout }),
-    [token, citizen, login, logout],
-  );
+  const value = useMemo(() => {
+    const role = principal?.role ?? null;
+    const isStaff = STAFF_ROLES.includes(role);
+
+    return {
+      token,
+      role,
+      principal,
+      isAuthenticated: Boolean(token),
+      isStaff,
+      isCitizen: role === CITIZEN,
+      // Narrowed views, so a component cannot accidentally read a staff record
+      // where it expects a citizen.
+      citizen: role === CITIZEN ? principal : null,
+      staff: isStaff ? principal : null,
+      login,
+      loginStaff,
+      logout,
+    };
+  }, [token, principal, login, loginStaff, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

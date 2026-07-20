@@ -203,6 +203,89 @@
     "REQUEST_NOT_FOUND": "Demande introuvable.",
     "DECLINED": "Le paiement a été refusé. Vous pouvez réessayer avec un autre moyen de paiement."
   },
+  "status": {
+    "DRAFT": "Brouillon",
+    "SUBMITTED": "Soumise",
+    "PENDING_PAYMENT": "En attente de paiement",
+    "PAID": "Payée",
+    "UNDER_REVIEW": "En cours d'instruction",
+    "NEEDS_INFO": "Complément demandé",
+    "APPROVED": "Approuvée",
+    "REJECTED": "Rejetée",
+    "ISSUED": "Document émis",
+    "DELIVERED": "Délivrée"
+  },
+  "admin": {
+    "title": "Back-office eCivil",
+    "inbox": "Demandes à traiter",
+    "inboxSubtitle": "Les demandes de votre pôle, de la plus récente à la plus ancienne.",
+    "prototypeNotice": "Prototype de démonstration — données fictives, aucune décision n'a de valeur légale.",
+    "allModules": "Tous les pôles",
+    "backToInbox": "Retour aux demandes",
+    "searchLabel": "Rechercher une demande",
+    "searchPlaceholder": "Référence, ex. ECV-2026-000042",
+    "empty": "Aucune demande ne correspond à ces critères.",
+    "count": "{{count}} demande",
+    "count_other": "{{count}} demandes",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "pageOf": "Page {{page}} sur {{pages}}",
+    "roles": {
+      "AGENT": "Agent instructeur",
+      "ADMIN": "Administrateur de pôle",
+      "SUPER_ADMIN": "Super-administrateur"
+    },
+    "filters": {
+      "all": "Toutes",
+      "me": "Qui me sont assignées",
+      "unassigned": "Non assignées"
+    },
+    "login": {
+      "title": "Accès réservé au personnel",
+      "subtitle": "Connectez-vous avec votre adresse professionnelle.",
+      "email": "Adresse professionnelle",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "demoHint": "Démonstration : agent.etatcivil@ecivil.demo / Demo!Agent2",
+      "backToSite": "Retour au site citoyen"
+    },
+    "detail": {
+      "applicant": "Demandeur",
+      "request": "Demande",
+      "attachments": "Pièces justificatives",
+      "decision": "Décision",
+      "timeline": "Historique",
+      "assignedTo": "Instruite par {{name}}",
+      "take": "Prendre en charge",
+      "approve": "Approuver",
+      "askInfo": "Demander un complément",
+      "reject": "Rejeter",
+      "rejectReason": "Motif du rejet",
+      "infoNote": "Pièce ou information manquante",
+      "messagePlaceholder": "Ce message sera transmis au demandeur.",
+      "messageHint": "10 caractères minimum. Soyez précis : le citoyen doit pouvoir agir.",
+      "rejectionReason": "Motif du rejet",
+      "confirm": "Confirmer",
+      "cancel": "Annuler",
+      "noActions": "Aucune action disponible à ce stade.",
+      "open": "Ouvrir",
+      "opening": "Ouverture…"
+    }
+  },
+  "adminErrors": {
+    "INVALID_CREDENTIALS": "Adresse ou mot de passe incorrect.",
+    "LOGIN_RATE_LIMITED": "Trop de tentatives. Patientez quelques minutes.",
+    "STAFF_ONLY": "Cet espace est réservé au personnel habilité.",
+    "STAFF_NOT_FOUND": "Votre compte n'est plus actif. Contactez votre administrateur.",
+    "ROLE_FORBIDDEN": "Votre rôle ne permet pas cette action.",
+    "MODULE_FORBIDDEN": "Cette demande ne relève pas de votre pôle.",
+    "REQUEST_NOT_FOUND": "Demande introuvable ou hors de votre périmètre.",
+    "ALREADY_ASSIGNED": "Un autre agent instruit déjà cette demande.",
+    "NOT_ASSIGNED": "Cette demande est assignée à un autre agent.",
+    "NOT_UNDER_REVIEW": "Prenez la demande en charge avant de statuer.",
+    "INVALID_TRANSITION": "Cette action n'est pas possible à ce stade du dossier.",
+    "ATTACHMENT_NOT_FOUND": "Pièce jointe introuvable."
+  },
   "footer": {
     "disclaimer": "Prototype réalisé à des fins de démonstration. Aucune donnée réelle n'est traitée.",
     "rights": "République du Mali — Projet eCivil"
