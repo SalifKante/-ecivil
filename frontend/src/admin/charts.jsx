@@ -19,11 +19,22 @@ export function StatTile({ label, value, hint, tone = 'default' }) {
     bad: 'text-ecivil-red-600',
   };
 
+  const accents = {
+    default: 'before:bg-slate-300',
+    good: 'before:bg-ecivil-green-600',
+    warn: 'before:bg-ecivil-gold-400',
+    bad: 'before:bg-ecivil-red-500',
+  };
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
+    // The accent rule is a top border drawn with a pseudo-element, so the tile
+    // keeps one consistent shape whatever tone it carries.
+    <div
+      className={`relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm before:absolute before:inset-x-0 before:top-0 before:h-1 before:content-[''] ${accents[tone]}`}
+    >
       <p className="text-xs text-slate-500">{label}</p>
       <p className={`mt-1 text-2xl font-semibold tabular-nums ${tones[tone]}`}>{value}</p>
-      {hint && <p className="mt-0.5 text-xs text-slate-400">{hint}</p>}
+      {hint && <p className="mt-0.5 text-xs text-pretty text-slate-400">{hint}</p>}
     </div>
   );
 }
@@ -39,7 +50,7 @@ export function DailyBars({ data, title }) {
   const max = Math.max(1, ...data.map((d) => d.count));
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h2 className="font-semibold text-slate-900">{title}</h2>
       <p className="mt-0.5 text-xs text-slate-400">{t('admin.dash.lastDays', { count: data.length })}</p>
 
@@ -107,7 +118,7 @@ export function BreakdownBars({ title, rows, emptyLabel }) {
   const max = Math.max(1, ...rows.map((r) => r.count));
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h2 className="font-semibold text-slate-900">{title}</h2>
 
       {rows.length === 0 ? (

@@ -137,6 +137,25 @@
     "verifying": "Vérification…",
     "changeNina": "Modifier le numéro NINA",
     "resend": "Renvoyer un code",
+    "stepsLabel": "Étapes de connexion",
+    "steps": {
+      "nina": "Votre NINA",
+      "otp": "Code de vérification"
+    },
+    "reassure": {
+      "nina": {
+        "title": "Une seule identité",
+        "description": "Votre NINA relie toutes vos démarches à une identité vérifiée, ce qui empêche les doublons et les usurpations."
+      },
+      "sms": {
+        "title": "Code à usage unique",
+        "description": "Un code différent à chaque connexion, valable 5 minutes. Aucun mot de passe à retenir."
+      },
+      "data": {
+        "title": "Données souveraines",
+        "description": "Vos informations restent hébergées sur l'infrastructure de l'État et ne sont jamais revendues."
+      }
+    },
     "greeting": "Bonjour {{name}}",
     "devCodeNotice": "Mode démonstration : votre code est {{code}}",
     "demoHint": "NINA de démonstration : 99990000000101"
@@ -155,7 +174,15 @@
     "diaspora": "Diaspora",
     "consulate": "Consulat de rattachement",
     "startRequest": "Commencer une démarche",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "recentTitle": "Démarches récentes",
+    "seeAll": "Tout voir",
+    "shortcuts": {
+      "services": "Passeport, acte de naissance, carte grise, titre foncier…",
+      "tracking": "{{count}} démarche en cours",
+      "tracking_other": "{{count}} démarches en cours",
+      "verify": "Contrôler l'authenticité d'un document par QR Code."
+    }
   },
   "authErrors": {
     "OTP_INVALID": "Code incorrect. Il vous reste {{remaining}} tentative(s).",
@@ -168,6 +195,11 @@
     "INVALID_TOKEN": "Votre session n'est plus valide. Reconnectez-vous."
   },
   "catalog": {
+    "eyebrow": "Guichet unique",
+    "filterLabel": "Filtrer par pôle",
+    "count": "{{count}} démarche disponible",
+    "count_other": "{{count}} démarches disponibles",
+    "tariffNote": "Les tarifs affichés sont les tarifs officiels. Aucun frais supplémentaire n'est perçu sur la plateforme.",
     "title": "Services administratifs",
     "subtitle": "Choisissez une démarche. Les tarifs officiels sont affichés et réglés en ligne.",
     "allModules": "Tous les pôles",
@@ -333,6 +365,7 @@
     "navLabel": "Navigation de l'espace agent",
     "inbox": "Demandes à traiter",
     "inboxSubtitle": "Les demandes de votre pôle, de la plus récente à la plus ancienne.",
+    "inboxCount": "demandes visibles",
     "prototypeNotice": "Prototype de démonstration — données fictives, aucune décision n'a de valeur légale.",
     "allModules": "Tous les pôles",
     "backToInbox": "Retour aux demandes",
@@ -470,7 +503,9 @@
   },
   "footer": {
     "disclaimer": "Prototype réalisé à des fins de démonstration. Aucune donnée réelle n'est traitée.",
-    "rights": "République du Mali — Projet eCivil"
+    "rights": "République du Mali — Projet eCivil",
+    "navigation": "Navigation",
+    "staffAccess": "Accès agent"
   },
   "errors": {
     "NETWORK_ERROR": "Connexion au serveur impossible. Vérifiez votre réseau.",

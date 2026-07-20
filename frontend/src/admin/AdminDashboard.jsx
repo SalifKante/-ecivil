@@ -82,12 +82,10 @@ export default function AdminDashboard() {
         />
       </div>
 
-      <div className="mt-3 rounded-xl border border-slate-200 bg-white p-5">
-        <p className="text-xs text-slate-500">{t('admin.dash.revenue')}</p>
-        <p className="text-ecivil-green-700 mt-1 text-3xl font-semibold tabular-nums">
-          {formatXof(stats.revenue.total)}
-        </p>
-        <p className="mt-0.5 text-xs text-slate-400">
+      <div className="from-ecivil-green-800 to-ecivil-green-600 mt-3 overflow-hidden rounded-2xl bg-gradient-to-br p-6 text-white shadow-sm">
+        <p className="text-ecivil-green-100 text-xs">{t('admin.dash.revenue')}</p>
+        <p className="mt-1 text-4xl font-bold tabular-nums">{formatXof(stats.revenue.total)}</p>
+        <p className="text-ecivil-green-100 mt-1 text-xs">
           {t('admin.dash.revenueHint', { count: stats.revenue.payments })}
         </p>
       </div>

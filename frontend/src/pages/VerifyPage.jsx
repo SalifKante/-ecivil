@@ -31,15 +31,15 @@ export default function VerifyPage() {
   };
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-10">
-      <div className="flex items-center gap-3">
-        <span className="bg-ecivil-green-100 text-ecivil-green-700 grid size-11 place-items-center rounded-lg">
-          <ScanLine className="size-5" aria-hidden="true" />
+    <div className="mx-auto max-w-xl px-4 py-12">
+      <div className="text-center">
+        <span className="from-ecivil-green-600 to-ecivil-green-500 mx-auto grid size-14 place-items-center rounded-2xl bg-gradient-to-br text-white shadow-lg">
+          <ScanLine className="size-7" aria-hidden="true" />
         </span>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">{t('verify.title')}</h1>
-          <p className="text-slate-600">{t('verify.subtitle')}</p>
-        </div>
+        <h1 className="mt-5 text-3xl font-semibold text-balance text-slate-900">
+          {t('verify.title')}
+        </h1>
+        <p className="mt-2 text-pretty text-slate-600">{t('verify.subtitle')}</p>
       </div>
 
       {!token && (

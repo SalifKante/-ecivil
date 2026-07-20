@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
+import { Fingerprint, MessageSquare, ShieldCheck } from 'lucide-react';
 import { requestOtp, verifyOtp } from '../features/auth/authApi';
 import { useAuth } from '../features/auth/AuthContext';
+import MaliFlag from '../components/MaliFlag';
 
 const NINA_DIGITS = 14;
 
@@ -57,20 +59,53 @@ export default function LoginPage() {
   const isCodeValid = code.length === 6;
 
   return (
-    <div className="mx-auto flex max-w-md flex-col px-4 py-12">
-      <h1 className="text-2xl font-semibold text-slate-900">{t('login.title')}</h1>
-      <p className="mt-2 text-sm text-pretty text-slate-600">{t('login.subtitle')}</p>
+    <div className="bg-slate-50">
+      <div className="mx-auto grid max-w-5xl gap-10 px-4 py-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:py-16">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex items-center gap-2.5">
+            <span className="bg-ecivil-green-50 text-ecivil-green-700 grid size-10 place-items-center rounded-xl">
+              <Fingerprint className="size-5" aria-hidden="true" />
+            </span>
+            <MaliFlag className="h-4 w-6" />
+          </div>
 
-      {error && (
-        <p
-          role="alert"
-          className="bg-ecivil-red-100 text-ecivil-red-600 mt-6 rounded-lg px-4 py-3 text-sm"
-        >
-          {error}
-        </p>
-      )}
+          <h1 className="mt-5 text-2xl font-semibold text-balance text-slate-900">
+            {t('login.title')}
+          </h1>
+          <p className="mt-2 text-sm text-pretty text-slate-600">{t('login.subtitle')}</p>
 
-      {step === 'nina' ? (
+          {/* Two steps, and the citizen should be able to see which one they're on. */}
+          <ol className="mt-6 flex gap-2" aria-label={t('login.stepsLabel')}>
+            {['nina', 'otp'].map((s, i) => (
+              <li key={s} className="flex-1" aria-current={step === s ? 'step' : undefined}>
+                <div
+                  className={`h-1.5 rounded-full ${
+                    step === s || (step === 'otp' && i === 0)
+                      ? 'bg-ecivil-green-600'
+                      : 'bg-slate-200'
+                  }`}
+                />
+                <span
+                  className={`mt-2 block text-xs ${
+                    step === s ? 'font-medium text-slate-900' : 'text-slate-400'
+                  }`}
+                >
+                  {t(`login.steps.${s}`)}
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          {error && (
+            <p
+              role="alert"
+              className="bg-ecivil-red-100 text-ecivil-red-600 mt-6 rounded-lg px-4 py-3 text-sm"
+            >
+              {error}
+            </p>
+          )}
+
+          {step === 'nina' ? (
         <form
           className="mt-6"
           onSubmit={(e) => {
@@ -180,7 +215,37 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
-      )}
+          )}
+        </div>
+
+        {/* Why we are asking for a national identifier at all. */}
+        <aside className="space-y-4 lg:pt-4">
+          {[
+            { key: 'nina', Icon: Fingerprint },
+            { key: 'sms', Icon: MessageSquare },
+            { key: 'data', Icon: ShieldCheck },
+          ].map(({ key, Icon }) => (
+            <div key={key} className="rounded-xl border border-slate-200 bg-white p-4">
+              <span className="bg-ecivil-green-50 text-ecivil-green-700 grid size-9 place-items-center rounded-lg">
+                <Icon className="size-4.5" aria-hidden="true" />
+              </span>
+              <h2 className="mt-3 text-sm font-semibold text-slate-900">
+                {t(`login.reassure.${key}.title`)}
+              </h2>
+              <p className="mt-1 text-xs text-pretty text-slate-600">
+                {t(`login.reassure.${key}.description`)}
+              </p>
+            </div>
+          ))}
+
+          <Link
+            to="/admin/connexion"
+            className="block rounded-xl border border-dashed border-slate-300 p-4 text-center text-xs text-slate-500 transition-colors hover:bg-white"
+          >
+            {t('footer.staffAccess')}
+          </Link>
+        </aside>
+      </div>
     </div>
   );
 }

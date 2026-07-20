@@ -97,7 +97,10 @@ export default function ServiceManagement() {
       ) : (
         <ul className="mt-6 space-y-2">
           {services.map((s) => (
-            <li key={s._id} className="rounded-xl border border-slate-200 bg-white p-4">
+            <li
+              key={s._id}
+              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+            >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-900">

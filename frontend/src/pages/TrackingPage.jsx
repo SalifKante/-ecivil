@@ -6,6 +6,7 @@ import { fetchRequests } from '../features/requests/requestsApi';
 import { formatDate, MODULE_META } from '../lib/format';
 import StatusPill from '../components/StatusPill';
 import Loading from '../components/Loading';
+import PageHeader from '../components/PageHeader';
 
 export default function TrackingPage() {
   const { t } = useTranslation();
@@ -19,8 +20,12 @@ export default function TrackingPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-2xl font-semibold text-slate-900">{t('tracking.title')}</h1>
-      <p className="mt-1 text-slate-600">{t('tracking.subtitle')}</p>
+      <PageHeader
+        eyebrow={t('nav.tracking')}
+        icon={FileSearch}
+        title={t('tracking.title')}
+        subtitle={t('tracking.subtitle')}
+      />
 
       {justSubmitted && (
         <p

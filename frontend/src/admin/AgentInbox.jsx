@@ -38,8 +38,20 @@ export default function AgentInbox() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-slate-900">{t('admin.inbox')}</h1>
-      <p className="mt-1 text-slate-600">{t('admin.inboxSubtitle')}</p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900">{t('admin.inbox')}</h1>
+          <p className="mt-1 text-slate-600">{t('admin.inboxSubtitle')}</p>
+        </div>
+
+        {/* The number an agent actually cares about on arrival: how much is waiting. */}
+        {data?.total != null && (
+          <p className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+            <span className="text-2xl font-semibold tabular-nums text-slate-900">{data.total}</span>{' '}
+            <span className="text-slate-500">{t('admin.inboxCount')}</span>
+          </p>
+        )}
+      </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <FilterChip active={!status && !assigned} onClick={() => { setStatus(''); setAssigned(''); setPage(1); }}>
@@ -145,7 +157,7 @@ function RequestRow({ request }) {
   return (
     <Link
       to={`/admin/demandes/${request._id}`}
-      className="hover:border-ecivil-green-600 block rounded-xl border border-slate-200 bg-white p-4 transition-colors"
+      className="hover:border-ecivil-green-600 block rounded-xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">

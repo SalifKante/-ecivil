@@ -126,10 +126,10 @@ export default function PaymentPage() {
       <h1 className="mt-1 text-2xl font-semibold text-slate-900">{t('payment.title')}</h1>
       <p className="mt-1 text-slate-600">{t('payment.subtitle')}</p>
 
-      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-6">
-        <div className="flex items-baseline justify-between gap-4">
+      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
           <span className="text-sm text-slate-500">{t('payment.amountDue')}</span>
-          <span className="text-2xl font-semibold text-slate-900">
+          <span className="text-ecivil-green-700 text-3xl font-bold tabular-nums">
             {formatXof(request.amountDue)}
           </span>
         </div>
@@ -326,7 +326,7 @@ function Receipt({ request, payment, onTrack }) {
         </div>
       </div>
 
-      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-6">
+      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between gap-4">
           <h2 className="font-semibold text-slate-900">{t('payment.receipt.heading')}</h2>
           {brand && <img src={brand.logo} alt={brand.alt} className="h-7 w-auto object-contain" />}

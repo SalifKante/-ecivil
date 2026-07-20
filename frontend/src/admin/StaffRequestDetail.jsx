@@ -293,7 +293,7 @@ function BackLink() {
 
 function Card({ title, children }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h2 className="mb-3 font-semibold text-slate-900">{title}</h2>
       {children}
     </section>

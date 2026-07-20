@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Landmark, Loader2, ArrowLeft } from 'lucide-react';
 import { staffLogin } from '../features/auth/staffAuthApi';
 import { useAuth } from '../features/auth/AuthContext';
+import MaliFlag from '../components/MaliFlag';
 
 export default function StaffLoginPage() {
   const { t } = useTranslation();
@@ -34,22 +35,32 @@ export default function StaffLoginPage() {
 
   return (
     // A standalone route outside AdminLayout, so it carries its own landmark.
-    <main className="grid min-h-screen place-items-center bg-slate-900 px-4 py-10">
-      <div className="w-full max-w-md">
+    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-slate-900 px-4 py-10">
+      {/* A dark, deliberately un-citizen-like surface: staff should never be in
+          any doubt about which side of the platform they are on. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(15,132,73,0.35),transparent_60%)]"
+      />
+
+      <div className="relative w-full max-w-md">
         <div className="flex items-center justify-center gap-2.5 text-white">
           <span
             aria-hidden="true"
-            className="grid size-10 place-items-center rounded-lg bg-white/10"
+            className="from-ecivil-green-600 to-ecivil-green-500 grid size-11 place-items-center rounded-xl bg-gradient-to-br"
           >
-            <Landmark className="size-5" />
+            <Landmark className="size-5.5" />
           </span>
           <span className="leading-tight">
             <span className="block text-lg font-semibold">{t('admin.title')}</span>
-            <span className="block text-xs text-slate-300">{t('app.republic')}</span>
+            <span className="flex items-center gap-1.5 text-xs text-slate-300">
+              <MaliFlag className="h-2.5 w-4" />
+              {t('app.republic')}
+            </span>
           </span>
         </div>
 
-        <form onSubmit={onSubmit} className="mt-8 rounded-xl bg-white p-6 shadow-lg">
+        <form onSubmit={onSubmit} className="mt-8 rounded-2xl bg-white p-6 shadow-2xl sm:p-8">
           <h1 className="text-xl font-semibold text-slate-900">{t('admin.login.title')}</h1>
           <p className="mt-1 text-sm text-slate-600">{t('admin.login.subtitle')}</p>
 
