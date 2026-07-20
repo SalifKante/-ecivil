@@ -1,0 +1,83 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: ecivil-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - ecivil-mongo-data:/data/db
+
+  # Self-hosted S3-compatible object storage. Runs on our own infrastructure,
+  # which is what makes the sovereign-hosting requirement (PDF §6) reachable.
+  minio:
+    image: minio/minio:latest
+    container_name: ecivil-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+    ports:
+      - '9000:9000' # S3 API
+      - '9001:9001' # Web console
+    volumes:
+      - ecivil-minio-data:/data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # One-shot: creates the bucket and the least-privilege app user, then exits.
+  minio-init:
+    image: minio/mc:latest
+    container_name: ecivil-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: ${MINIO_BUCKET:-ecivil-documents}
+      MINIO_APP_ACCESS_KEY: ${MINIO_APP_ACCESS_KEY:?set MINIO_APP_ACCESS_KEY in .env}
+      MINIO_APP_SECRET_KEY: ${MINIO_APP_SECRET_KEY:?set MINIO_APP_SECRET_KEY in .env}
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        set -e
+        mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD"
+
+        # Private by default. Citizen documents must never be anonymously readable —
+        # access is granted per request through short-lived presigned URLs.
+        mc mb --ignore-existing "local/$$MINIO_BUCKET"
+        mc anonymous set none "local/$$MINIO_BUCKET"
+
+        # The API authenticates as a scoped user, never as root.
+        mc admin user add local "$$MINIO_APP_ACCESS_KEY" "$$MINIO_APP_SECRET_KEY" || true
+        cat > /tmp/ecivil-app-policy.json <<EOF
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET/*"]
+            },
+            {
+              "Effect": "Allow",
+              "Action": ["s3:ListBucket", "s3:GetBucketLocation"],
+              "Resource": ["arn:aws:s3:::$$MINIO_BUCKET"]
+            }
+          ]
+        }
+        EOF
+        mc admin policy create local ecivil-app /tmp/ecivil-app-policy.json || true
+        mc admin policy attach local ecivil-app --user "$$MINIO_APP_ACCESS_KEY" || true
+
+        echo "MinIO ready: bucket '$$MINIO_BUCKET' is private, app user scoped to it."
+
+volumes:
+  ecivil-mongo-data:
+  ecivil-minio-data:

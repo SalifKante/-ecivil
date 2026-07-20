@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+
+/* Design tokens — Mali institutional palette (green / gold / red). */
+@theme {
+  --color-ecivil-green-50: #eefbf3;
+  --color-ecivil-green-100: #d6f5e1;
+  --color-ecivil-green-200: #aeeac5;
+  --color-ecivil-green-500: #14a05a;
+  --color-ecivil-green-600: #0f8449;
+  --color-ecivil-green-700: #0c6739;
+  --color-ecivil-green-900: #06381f;
+
+  --color-ecivil-gold-100: #fdf3d3;
+  --color-ecivil-gold-300: #f7dd8a;
+  --color-ecivil-gold-400: #f2c94c;
+  --color-ecivil-gold-500: #e0b02f;
+  --color-ecivil-gold-700: #8a6a12;
+
+  --color-ecivil-red-100: #fde5e3;
+  --color-ecivil-red-500: #ce1126;
+  --color-ecivil-red-600: #a80d1e;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ecivil-green-600;
+  }
+}

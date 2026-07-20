@@ -1,0 +1,223 @@
+{
+  "app": {
+    "name": "eCivil",
+    "tagline": "Plateforme Unifiée de la Citoyenneté Numérique",
+    "republic": "République du Mali"
+  },
+  "prototype": {
+    "banner": "Prototype de démonstration — données fictives, aucune valeur légale."
+  },
+  "nav": {
+    "home": "Accueil",
+    "services": "Services",
+    "tracking": "Suivi",
+    "verify": "Vérifier un document",
+    "login": "Se connecter"
+  },
+  "home": {
+    "title": "Vos démarches administratives, en ligne",
+    "subtitle": "Demandez, payez et recevez vos documents officiels depuis chez vous, partout dans le monde, grâce à votre numéro NINA.",
+    "cta": "Commencer une démarche",
+    "modulesTitle": "Nos quatre pôles de services",
+    "benefits": {
+      "zeroTravel": {
+        "title": "Zéro déplacement",
+        "description": "Soumettez et suivez votre demande où que vous soyez, y compris depuis la diaspora."
+      },
+      "transparency": {
+        "title": "Tarifs transparents",
+        "description": "Les tarifs officiels sont affichés et réglés en ligne, sans surcoût informel."
+      },
+      "security": {
+        "title": "Sécurité renforcée",
+        "description": "Chaque document est chaîné à votre NINA et vérifiable par QR Code."
+      }
+    }
+  },
+  "modules": {
+    "identity": {
+      "name": "Identité & Voyage",
+      "description": "Passeports et cartes biométriques : demandes et renouvellements.",
+      "partner": "Ministère de la Sécurité"
+    },
+    "lifeEvents": {
+      "name": "Événements de Vie",
+      "description": "Actes d'état civil : naissance, mariage, déclarations et extraits.",
+      "partner": "Communes & Consulats"
+    },
+    "mobility": {
+      "name": "Mobilité Urbaine",
+      "description": "Immatriculation de véhicules et obtention de cartes grises.",
+      "partner": "Direction des Transports"
+    },
+    "land": {
+      "name": "Titres Fonciers",
+      "description": "Actes de propriété et vérification cadastrale.",
+      "partner": "Urbanisme & Domaines"
+    }
+  },
+  "placeholder": {
+    "description": "Cette fonctionnalité sera disponible dans une prochaine étape du prototype."
+  },
+  "login": {
+    "title": "Accédez à votre espace sécurisé",
+    "subtitle": "Connectez-vous avec votre numéro NINA. Un code de vérification vous sera envoyé par SMS.",
+    "ninaLabel": "Numéro NINA",
+    "ninaHelp": "14 chiffres, figurant sur votre carte NINA.",
+    "ninaPlaceholder": "9999 0000 0000 00",
+    "continue": "Continuer",
+    "sending": "Envoi en cours…",
+    "otpTitle": "Saisissez votre code",
+    "otpSentTo": "Un code à 6 chiffres a été envoyé au {{phone}}.",
+    "otpSentGeneric": "Si ce NINA est enregistré, un code à 6 chiffres vient d'être envoyé par SMS.",
+    "codeLabel": "Code de vérification",
+    "verify": "Se connecter",
+    "verifying": "Vérification…",
+    "changeNina": "Modifier le numéro NINA",
+    "resend": "Renvoyer un code",
+    "greeting": "Bonjour {{name}}",
+    "devCodeNotice": "Mode démonstration : votre code est {{code}}",
+    "demoHint": "NINA de démonstration : 99990000000101"
+  },
+  "dashboard": {
+    "title": "Mon espace",
+    "welcome": "Bienvenue, {{name}}",
+    "identityTitle": "Mon identité",
+    "identitySubtitle": "Informations issues du registre national. Elles pré-remplissent vos démarches.",
+    "nina": "Numéro NINA",
+    "birth": "Né(e) le",
+    "birthPlace": "Lieu de naissance",
+    "phone": "Téléphone",
+    "email": "Courriel",
+    "address": "Adresse",
+    "diaspora": "Diaspora",
+    "consulate": "Consulat de rattachement",
+    "startRequest": "Commencer une démarche",
+    "logout": "Se déconnecter"
+  },
+  "authErrors": {
+    "OTP_INVALID": "Code incorrect. Il vous reste {{remaining}} tentative(s).",
+    "OTP_EXPIRED": "Ce code a expiré. Demandez-en un nouveau.",
+    "OTP_NOT_FOUND": "Aucune demande de code en cours. Recommencez la connexion.",
+    "OTP_ATTEMPTS_EXCEEDED": "Trop de tentatives incorrectes. Demandez un nouveau code.",
+    "OTP_RATE_LIMITED": "Trop de demandes. Patientez quelques minutes avant de réessayer.",
+    "MISSING_TOKEN": "Votre session a expiré. Reconnectez-vous.",
+    "TOKEN_EXPIRED": "Votre session a expiré. Reconnectez-vous.",
+    "INVALID_TOKEN": "Votre session n'est plus valide. Reconnectez-vous."
+  },
+  "catalog": {
+    "title": "Services administratifs",
+    "subtitle": "Choisissez une démarche. Les tarifs officiels sont affichés et réglés en ligne.",
+    "allModules": "Tous les pôles",
+    "services": "service(s)",
+    "free": "Gratuit",
+    "processingDays": "Délai : {{count}} jour",
+    "processingDays_other": "Délai : {{count}} jours",
+    "requiredDocuments": "Pièces à fournir",
+    "start": "Faire cette demande",
+    "loginToStart": "Connectez-vous pour commencer",
+    "empty": "Aucun service dans ce pôle pour le moment."
+  },
+  "wizard": {
+    "title": "Nouvelle démarche",
+    "step": "Étape {{current}} sur {{total}}",
+    "steps": {
+      "info": "Informations",
+      "documents": "Pièces justificatives",
+      "review": "Récapitulatif"
+    },
+    "prefillNotice": "Vos informations personnelles sont pré-remplies depuis le registre national. Vérifiez-les.",
+    "applicant": "Demandeur",
+    "serviceLabel": "Démarche",
+    "amountDue": "Montant à régler",
+    "motifLabel": "Motif de la demande",
+    "motifPlaceholder": "Précisez l'objet de votre démarche",
+    "deliveryLabel": "Mode de réception",
+    "delivery": {
+      "DIGITAL": "Document numérique (avec QR Code)",
+      "HOME": "Livraison à domicile",
+      "PICKUP_POINT": "Retrait en point relais"
+    },
+    "deliveryAddress": "Adresse de livraison",
+    "pickupPoint": "Point relais",
+    "uploadTitle": "Déposez vos pièces",
+    "uploadHint": "JPG, PNG ou PDF — 5 Mo maximum par fichier.",
+    "uploadButton": "Ajouter un fichier",
+    "uploading": "Envoi…",
+    "noAttachments": "Aucune pièce ajoutée pour l'instant.",
+    "remove": "Retirer",
+    "reviewNotice": "Vérifiez votre demande avant de la soumettre. Après soumission, vous passerez au paiement.",
+    "back": "Précédent",
+    "next": "Suivant",
+    "saveDraft": "Enregistrer le brouillon",
+    "submit": "Soumettre la demande",
+    "submitting": "Soumission…",
+    "createError": "Impossible de créer la demande. Réessayez.",
+    "submitSuccess": "Demande {{reference}} soumise. Vous allez être redirigé vers le paiement.",
+    "specimenReminder": "Prototype : les documents produits seront des spécimens sans valeur légale."
+  },
+  "payment": {
+    "title": "Régler votre demande",
+    "subtitle": "Choisissez votre moyen de paiement. Le montant est le tarif officiel de la démarche.",
+    "amountDue": "Montant à régler",
+    "officialTariff": "Tarif officiel fixé par l'administration partenaire. Aucun frais supplémentaire.",
+    "chooseProvider": "Moyen de paiement",
+    "phoneLabel": "Numéro Mobile Money",
+    "phoneHelp": "Le numéro du portefeuille à débiter. Vous recevrez une demande de confirmation.",
+    "cardNotice": "Vous serez redirigé vers l'interface sécurisée de la banque partenaire. eCivil ne conserve aucune donnée de carte.",
+    "pay": "Payer {{amount}}",
+    "providerRef": "Référence de transaction",
+    "changeProvider": "Changer de moyen de paiement",
+    "backToDashboard": "Retour à mon espace",
+    "pending": {
+      "mobileTitle": "Confirmez sur votre téléphone",
+      "mobileBody": "Une demande de paiement de {{amount}} a été envoyée au {{phone}}. Validez-la avec votre code secret.",
+      "cardTitle": "Redirection vers la banque partenaire",
+      "cardBody": "Un paiement de {{amount}} est en attente de validation auprès de la banque partenaire."
+    },
+    "simulationHint": "Prototype : aucun paiement réel n'est effectué. Choisissez l'issue à simuler.",
+    "simulateSuccess": "Simuler un paiement réussi",
+    "simulateFailure": "Simuler un refus",
+    "mockNotice": "Prototype de démonstration : les paiements sont simulés, aucun montant n'est débité.",
+    "receipt": {
+      "title": "Paiement confirmé",
+      "subtitle": "Votre demande est transmise au service instructeur.",
+      "heading": "Reçu de paiement",
+      "reference": "Référence de la demande",
+      "amount": "Montant réglé",
+      "provider": "Moyen de paiement",
+      "paidAt": "Payé le",
+      "disclaimer": "Reçu de démonstration — prototype sans valeur légale ni comptable. Aucun montant n'a été débité.",
+      "track": "Suivre ma demande",
+      "print": "Imprimer le reçu",
+      "newRequest": "Nouvelle démarche"
+    }
+  },
+  "paymentErrors": {
+    "NOT_PAYABLE": "Cette demande n'est pas en attente de paiement.",
+    "NO_PAYMENT_DUE": "Cette démarche est gratuite, aucun paiement n'est requis.",
+    "PAYER_PHONE_REQUIRED": "Indiquez le numéro Mobile Money à débiter.",
+    "PAYMENT_NOT_FOUND": "Cette transaction est introuvable. Relancez le paiement.",
+    "PAYMENT_ALREADY_SETTLED": "Ce paiement a déjà été traité.",
+    "PAYMENT_RATE_LIMITED": "Trop de tentatives de paiement. Patientez quelques minutes.",
+    "REQUEST_NOT_FOUND": "Demande introuvable.",
+    "DECLINED": "Le paiement a été refusé. Vous pouvez réessayer avec un autre moyen de paiement."
+  },
+  "footer": {
+    "disclaimer": "Prototype réalisé à des fins de démonstration. Aucune donnée réelle n'est traitée.",
+    "rights": "République du Mali — Projet eCivil"
+  },
+  "errors": {
+    "NETWORK_ERROR": "Connexion au serveur impossible. Vérifiez votre réseau.",
+    "UNKNOWN_ERROR": "Une erreur inattendue est survenue.",
+    "INTERNAL_ERROR": "Le service rencontre un problème. Réessayez plus tard.",
+    "VALIDATION_ERROR": "Certaines informations saisies sont invalides.",
+    "ROUTE_NOT_FOUND": "La ressource demandée est introuvable.",
+    "RATE_LIMITED": "Trop de tentatives. Patientez quelques instants."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "back": "Retour à l'accueil"
+  }
+}
