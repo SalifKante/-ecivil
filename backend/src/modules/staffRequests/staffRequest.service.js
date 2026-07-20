@@ -1,5 +1,5 @@
 import { Request } from '../../models/index.js';
-import { applyTransition } from '../requests/requestStateMachine.js';
+import { applyTransition, commitRequest } from '../requests/requestStateMachine.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { assertModuleAccess, moduleScopeFilter } from '../../middleware/rbac.js';
 import { recordAudit, AUDIT_ACTIONS } from '../../utils/audit.js';
@@ -123,7 +123,7 @@ export async function assignRequest({ auth, requestId, ip }) {
     });
   }
 
-  await request.save();
+  await commitRequest(request);
 
   await recordAudit({
     actorId: auth.id,
@@ -162,7 +162,7 @@ async function decide({ auth, requestId, ip, to, note, action, extra = {} }) {
 
   applyTransition(request, to, { actor: { id: auth.id, role: auth.role }, note });
   Object.assign(request, extra);
-  await request.save();
+  await commitRequest(request);
 
   await recordAudit({
     actorId: auth.id,

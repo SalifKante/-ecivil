@@ -1,6 +1,6 @@
 import { Payment } from '../../models/index.js';
 import { getOwnedRequest } from '../requests/request.service.js';
-import { applyTransition } from '../requests/requestStateMachine.js';
+import { applyTransition, commitRequest } from '../requests/requestStateMachine.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { PAYMENT_STATUS, REQUEST_STATUS, ROLES } from '../../constants/index.js';
 import * as gateway from '../../adapters/payment.js';
@@ -102,7 +102,7 @@ export async function handleProviderCallback({ requestId, citizenId, providerRef
       note: `Paid ${settled.amount} ${settled.currency} via ${settled.provider}`,
     });
     request.paymentId = settled._id;
-    await request.save();
+    await commitRequest(request);
   }
 
   return { payment: settled, request };

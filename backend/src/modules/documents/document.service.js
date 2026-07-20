@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { Document, Request } from '../../models/index.js';
 import { renderDocumentPdf } from './documentPdf.js';
-import { applyTransition } from '../requests/requestStateMachine.js';
+import { applyTransition, commitRequest } from '../requests/requestStateMachine.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { assertModuleAccess } from '../../middleware/rbac.js';
 import { recordAudit, AUDIT_ACTIONS } from '../../utils/audit.js';
@@ -90,7 +90,7 @@ export async function issueDocument({ auth, requestId, ip }) {
     note: 'Demo document issued',
   });
   request.documentId = document._id;
-  await request.save();
+  await commitRequest(request);
 
   await recordAudit({
     actorId: auth.id,

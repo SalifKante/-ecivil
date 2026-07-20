@@ -1,5 +1,6 @@
 import { REQUEST_TRANSITIONS } from '../../constants/index.js';
 import { ApiError } from '../../utils/ApiError.js';
+import { notifyPendingTransitions } from '../notifications/notification.service.js';
 
 export function canTransition(from, to) {
   return REQUEST_TRANSITIONS[from]?.includes(to) ?? false;
@@ -35,5 +36,27 @@ export function applyTransition(request, to, { actor, note } = {}) {
     at: new Date(),
   });
 
+  // Queued rather than sent here: this function does not save, and telling a
+  // citizen about a change that never persists is worse than telling them late.
+  // `commitRequest` flushes the queue once the write lands.
+  // `$locals` exists on a Mongoose document but not on a plain object, which the
+  // state machine must still accept — it is pure logic and unit-tested as such.
+  request.$locals ??= {};
+  request.$locals.pendingTransitions ??= [];
+  request.$locals.pendingTransitions.push({ from, to, note });
+
+  return request;
+}
+
+/**
+ * Saves a request and notifies the citizen of every transition applied to it.
+ *
+ * Use this instead of `request.save()` anywhere a transition was applied. Keeping
+ * save and notify together is what stops a new code path from silently skipping
+ * the notification.
+ */
+export async function commitRequest(request) {
+  await request.save();
+  await notifyPendingTransitions(request);
   return request;
 }

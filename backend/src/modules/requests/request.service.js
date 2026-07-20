@@ -1,6 +1,6 @@
 import { Request, Counter } from '../../models/index.js';
 import { getServiceById } from '../services/services.service.js';
-import { applyTransition } from './requestStateMachine.js';
+import { applyTransition, commitRequest } from './requestStateMachine.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { REQUEST_STATUS, ROLES } from '../../constants/index.js';
 import * as storage from '../../adapters/storage.js';
@@ -86,7 +86,7 @@ export async function submitRequest({ requestId, citizenId }) {
     });
   }
 
-  await request.save();
+  await commitRequest(request);
   return request;
 }
 
