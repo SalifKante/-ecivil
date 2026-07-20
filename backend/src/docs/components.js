@@ -223,6 +223,49 @@ export const components = {
         isRevoked: { type: 'boolean' },
       },
     },
+    Stats: {
+      type: 'object',
+      description: 'Dashboard figures, already scoped to what the caller may see.',
+      properties: {
+        scope: {
+          oneOf: [
+            { type: 'string', enum: ['GLOBAL'] },
+            { type: 'array', items: { type: 'string', enum: Object.values(MODULE_KEYS) } },
+          ],
+        },
+        totals: {
+          type: 'object',
+          properties: {
+            requests: { type: 'integer' },
+            open: { type: 'integer', description: 'PAID + UNDER_REVIEW + NEEDS_INFO' },
+            issued: { type: 'integer' },
+            rejected: { type: 'integer' },
+            staff: { type: 'integer' },
+          },
+        },
+        revenue: {
+          type: 'object',
+          properties: {
+            total: { type: 'integer', description: `Integer ${CURRENCY}, settled payments only.` },
+            payments: { type: 'integer' },
+            currency: { type: 'string', example: CURRENCY },
+          },
+        },
+        byStatus: { type: 'object', additionalProperties: { type: 'integer' } },
+        byModule: { type: 'object', additionalProperties: { type: 'integer' } },
+        perDay: {
+          type: 'array',
+          description: 'Quiet days are explicit zeros, so a chart does not skip them.',
+          items: {
+            type: 'object',
+            properties: {
+              date: { type: 'string', format: 'date' },
+              count: { type: 'integer' },
+            },
+          },
+        },
+      },
+    },
     VerificationResult: {
       type: 'object',
       description:

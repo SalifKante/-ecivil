@@ -11,6 +11,7 @@ import requestRoutes from './modules/requests/request.routes.js';
 import paymentRoutes from './modules/payments/payment.routes.js';
 import staffAuthRoutes from './modules/staffAuth/staffAuth.routes.js';
 import staffRequestRoutes from './modules/staffRequests/staffRequest.routes.js';
+import adminRoutes from './modules/admin/admin.routes.js';
 import {
   publicDocumentRoutes,
   staffDocumentRoutes,
@@ -71,6 +72,7 @@ export function createApp() {
   app.use('/api/v1/staff', staffAuthRoutes);
   app.use('/api/v1/staff', staffRequestRoutes);
   app.use('/api/v1/staff', staffDocumentRoutes);
+  app.use('/api/v1/staff', adminRoutes);
 
   // ORDER MATTERS: the citizen routers below apply `requireAuth` + CITIZEN via a
   // pathless router.use, which runs for every /api/v1 request that reaches them.

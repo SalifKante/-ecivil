@@ -84,6 +84,8 @@ export function toStaffProfile(user) {
     fullName: user.fullName,
     role: user.role,
     moduleScope: user.moduleScope,
+    // The management screens need to show who is disabled, not just who exists.
+    isActive: user.isActive,
     lastLoginAt: user.lastLoginAt,
   };
 }

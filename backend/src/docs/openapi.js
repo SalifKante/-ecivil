@@ -25,6 +25,7 @@ export const openapiSpec = {
     { name: 'Payments', description: 'Mock mobile money and card payments (auth required)' },
     { name: 'Back-office', description: 'Staff authentication and request review (RBAC)' },
     { name: 'Documents', description: 'Demo document issuance and public QR verification' },
+    { name: 'Administration', description: 'Module-admin and super-admin management + stats' },
   ],
   // Applied by default; endpoints that are public override with `security: []`.
   security: [{ bearerAuth: [] }],

@@ -1,4 +1,4 @@
-import { MODULE_KEYS, PAYMENT_OUTCOMES, REQUEST_STATUS } from '../constants/index.js';
+import { MODULE_KEYS, PAYMENT_OUTCOMES, REQUEST_STATUS, ROLES } from '../constants/index.js';
 
 const errorRef = { $ref: '#/components/schemas/Error' };
 const jsonError = { 'application/json': { schema: errorRef } };
@@ -233,6 +233,278 @@ export const paths = {
         },
         401: { $ref: '#/components/responses/Unauthorized' },
         403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+  },
+
+  '/api/v1/staff/admin/stats': {
+    get: {
+      tags: ['Administration'],
+      summary: 'Dashboard statistics, scoped by role',
+      description:
+        'ADMIN sees its own module, SUPER_ADMIN sees the platform. The scope is applied to ' +
+        'the query, so an out-of-scope request never reaches the caller even as a number. ' +
+        'Citizen drafts are excluded from every figure.',
+      responses: {
+        200: {
+          description: 'Statistics',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { stats: { $ref: '#/components/schemas/Stats' } },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+  },
+
+  '/api/v1/staff/admin/users': {
+    get: {
+      tags: ['Administration'],
+      summary: 'List staff accounts within reach',
+      description: 'ADMIN sees the agents of its own modules; SUPER_ADMIN sees everyone.',
+      parameters: [
+        {
+          name: 'role',
+          in: 'query',
+          schema: { type: 'string', enum: [ROLES.AGENT, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
+        },
+        {
+          name: 'moduleKey',
+          in: 'query',
+          schema: { type: 'string', enum: Object.values(MODULE_KEYS) },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Accounts',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  users: { type: 'array', items: { $ref: '#/components/schemas/StaffUser' } },
+                },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+    post: {
+      tags: ['Administration'],
+      summary: 'Create a staff account',
+      description:
+        'An ADMIN may create AGENTs inside its own moduleScope and nothing else. ' +
+        'SUPER_ADMIN may create an ADMIN for any module. SUPER_ADMIN is not a creatable ' +
+        'role here: minting another global operator is not a routine management action.',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['email', 'fullName', 'password', 'role', 'moduleScope'],
+              properties: {
+                email: { type: 'string', format: 'email' },
+                fullName: { type: 'string', minLength: 2, maxLength: 120 },
+                password: { type: 'string', format: 'password', minLength: 10 },
+                role: { type: 'string', enum: [ROLES.AGENT, ROLES.ADMIN] },
+                moduleScope: {
+                  type: 'array',
+                  minItems: 1,
+                  items: { type: 'string', enum: Object.values(MODULE_KEYS) },
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'Account created',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { user: { $ref: '#/components/schemas/StaffUser' } },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { description: 'Role or scope beyond the caller', content: jsonError },
+        409: { description: 'Email already taken', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/admin/users/{id}': {
+    patch: {
+      tags: ['Administration'],
+      summary: 'Update a staff account',
+      description:
+        'Name, active flag and module scope. An ADMIN may only touch AGENTs already inside ' +
+        'its own scope, and may not grant a module it does not hold. Nobody may edit their ' +
+        'own account here — that blocks both self-lockout and quiet self-promotion.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                fullName: { type: 'string', minLength: 2, maxLength: 120 },
+                isActive: { type: 'boolean' },
+                moduleScope: {
+                  type: 'array',
+                  minItems: 1,
+                  items: { type: 'string', enum: Object.values(MODULE_KEYS) },
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Updated account',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { user: { $ref: '#/components/schemas/StaffUser' } },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { description: 'Beyond the caller reach, or the caller itself', content: jsonError },
+        404: { $ref: '#/components/responses/NotFound' },
+      },
+    },
+  },
+
+  '/api/v1/staff/admin/services': {
+    get: {
+      tags: ['Administration'],
+      summary: 'List services within the caller module scope',
+      responses: {
+        200: {
+          description: 'Services',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  services: { type: 'array', items: { $ref: '#/components/schemas/Service' } },
+                },
+              },
+            },
+          },
+        },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { $ref: '#/components/responses/Forbidden' },
+      },
+    },
+    post: {
+      tags: ['Administration'],
+      summary: 'Create a service with its official tariff',
+      description: 'Only inside the caller module scope. The fee is integer XOF.',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['code', 'moduleKey', 'label', 'fee', 'processingDays'],
+              properties: {
+                code: { type: 'string', example: 'LE-BIRTH-EXTRACT' },
+                moduleKey: { type: 'string', enum: Object.values(MODULE_KEYS) },
+                label: { type: 'string' },
+                description: { type: 'string' },
+                partner: { type: 'string' },
+                requiredDocuments: { type: 'array', items: { type: 'string' } },
+                fee: { type: 'integer', minimum: 0 },
+                processingDays: { type: 'integer', minimum: 1, maximum: 365 },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'Service created',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { service: { $ref: '#/components/schemas/Service' } },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        403: { $ref: '#/components/responses/Forbidden' },
+        409: { description: 'Code already taken', content: jsonError },
+      },
+    },
+  },
+
+  '/api/v1/staff/admin/services/{id}': {
+    patch: {
+      tags: ['Administration'],
+      summary: 'Update a service or its tariff',
+      description:
+        'moduleKey is not updatable: moving a service between modules would move it out of ' +
+        'the caller own scope in a single call. Tariff changes record the old and new value ' +
+        'in the audit log.',
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                label: { type: 'string' },
+                description: { type: 'string' },
+                partner: { type: 'string' },
+                requiredDocuments: { type: 'array', items: { type: 'string' } },
+                fee: { type: 'integer', minimum: 0 },
+                processingDays: { type: 'integer', minimum: 1, maximum: 365 },
+                isActive: { type: 'boolean' },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Updated service',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { service: { $ref: '#/components/schemas/Service' } },
+              },
+            },
+          },
+        },
+        400: { $ref: '#/components/responses/ValidationError' },
+        401: { $ref: '#/components/responses/Unauthorized' },
+        404: { $ref: '#/components/responses/NotFound' },
       },
     },
   },
