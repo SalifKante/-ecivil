@@ -40,7 +40,23 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      - run: npm ci
+      # `npm install`, not `npm ci`, and deliberately.
+      #
+      # The lockfile is generated on Windows, where npm prunes the wasm fallback
+      # branch of the native toolchain: @napi-rs/wasm-runtime and the
+      # *-wasm32-wasi bindings of Rolldown and Tailwind require @emnapi/core and
+      # @emnapi/runtime, but those never get package entries. On Linux npm
+      # expects them, so `npm ci` aborts with
+      #   "Missing: @emnapi/core from lock file".
+      # Regenerating the lockfile here cannot fix it — not with
+      # --package-lock-only, not with --os=linux --cpu=x64, not with a full
+      # rebuild. All three were tried; all three prune the same entries.
+      #
+      # `npm install` still honours the lockfile for everything it does cover
+      # and only resolves what is missing, so the cost is a little less
+      # reproducibility on a demo deploy. The real fix is a lockfile generated
+      # on Linux, which is worth doing if this project ever gains a CI matrix.
+      - run: npm install --no-audit --no-fund
 
       - run: npm run lint
 
