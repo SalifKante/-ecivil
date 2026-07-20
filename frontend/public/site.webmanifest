@@ -1,0 +1,18 @@
+{
+  "name": "eCivil — Plateforme Unifiée de la Citoyenneté Numérique",
+  "short_name": "eCivil",
+  "description": "Prototype de démonstration : demandez, payez et recevez vos documents officiels en ligne grâce à votre numéro NINA.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0c6739",
+  "icons": [
+    { "src": "./favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "./icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "./icon-512.png", "type": "image/png", "sizes": "512x512" },
+    { "src": "./icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

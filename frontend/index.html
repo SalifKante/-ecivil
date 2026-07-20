@@ -2,13 +2,40 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>eCivil — Plateforme Unifiée de la Citoyenneté Numérique</title>
     <meta
       name="description"
-      content="eCivil — plateforme unifiée de la citoyenneté numérique. Prototype de démonstration."
+      content="Prototype de démonstration : demandez, payez et recevez vos documents officiels en ligne grâce à votre numéro NINA."
     />
-    <title>eCivil — Plateforme Unifiée de la Citoyenneté Numérique</title>
+
+    <!--
+      SVG first: it stays sharp at any size and is what every current browser
+      picks. The 32px PNG is the fallback for those that ignore SVG icons, and
+      apple-touch-icon covers "add to home screen" on iOS, which uses a
+      screenshot of the page when it is missing.
+    -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Tints the browser chrome on Android and the title bar on desktop Safari. -->
+    <meta name="theme-color" content="#0c6739" />
+    <meta name="apple-mobile-web-app-title" content="eCivil" />
+
+    <!-- Link previews, since the demo is meant to be shared. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="eCivil" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content="eCivil — Plateforme Unifiée de la Citoyenneté Numérique" />
+    <meta
+      property="og:description"
+      content="Prototype : un guichet unique pour demander, payer et recevoir ses documents officiels, chaîné au numéro NINA."
+    />
+    <meta property="og:image" content="/icon-512.png" />
+    <meta name="twitter:card" content="summary" />
   </head>
   <body>
     <div id="root"></div>
