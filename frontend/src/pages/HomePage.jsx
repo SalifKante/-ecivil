@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { MODULE_META } from '../lib/format';
 import MaliFlag, { MaliStripe } from '../components/MaliFlag';
-import { photo } from '../assets/photos';
+import { photo } from '../assets/photos.js';
 
 const moduleKeys = ['identity', 'lifeEvents', 'mobility', 'land'];
 
@@ -53,6 +53,10 @@ export default function HomePage() {
             src={hero}
             alt=""
             aria-hidden="true"
+            // Decorative and behind an opacity layer, so it must never hold up the
+            // headline: decoded off the main thread, at low fetch priority.
+            decoding="async"
+            fetchPriority="low"
             className="absolute inset-0 -z-10 size-full object-cover opacity-25"
           />
         )}
@@ -223,6 +227,7 @@ export default function HomePage() {
             aria-hidden="true"
             className="absolute inset-0 -z-10 size-full object-cover opacity-30"
             loading="lazy"
+            decoding="async"
           />
         )}
         <div className="absolute inset-0 -z-10 bg-slate-900/70" />
