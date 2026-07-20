@@ -41,9 +41,51 @@ export const STATUS_META = {
   DELIVERED: 'bg-ecivil-green-100 text-ecivil-green-700',
 };
 
+/**
+ * Hex equivalents of STATUS_META, for inline fills that cannot take a utility
+ * class. Kept adjacent so the two never drift apart.
+ */
+export const STATUS_COLOR = {
+  DRAFT: '#94a3b8',
+  SUBMITTED: '#0284c7',
+  PENDING_PAYMENT: '#b45309',
+  PAID: '#4f46e5',
+  UNDER_REVIEW: '#0284c7',
+  NEEDS_INFO: '#b45309',
+  APPROVED: '#0f8449',
+  REJECTED: '#a80d1e',
+  ISSUED: '#0f8449',
+  DELIVERED: '#0c6739',
+};
+
 export function formatDateTime(value) {
   return value ? new Date(value).toLocaleString('fr-FR') : '—';
 }
+
+/**
+ * Categorical series colours, one per module, assigned by entity and never by
+ * rank — a filter that drops a module must not repaint the survivors.
+ *
+ * These are NOT the Mali brand colours, deliberately. Green/gold/red is a flag,
+ * not a categorical scale: validated as chart series, the gold fell outside the
+ * lightness band and under 3:1 contrast, slate read as grey, and red against gold
+ * measured ΔE 1.0 under deuteranopia — indistinguishable. This set (Okabe–Ito)
+ * passes the lightness band, chroma floor, CVD separation and normal-vision
+ * checks. The brand palette keeps badges and chrome, where a label always sits
+ * beside the hue.
+ *
+ * `#CC79A7` measures 2.98:1 against the surface, just under the 3:1 target, so
+ * every chart using it carries direct labels rather than leaning on the fill.
+ */
+export const MODULE_SERIES_COLOR = {
+  identity: '#0072B2',
+  lifeEvents: '#009E73',
+  mobility: '#D55E00',
+  land: '#CC79A7',
+};
+
+/** Single-series charts use one hue; identity comes from the title, not colour. */
+export const SERIES_HUE = '#0f8449';
 
 /**
  * Brand marks per payment provider. Real logos rather than Lucide glyphs — a payer

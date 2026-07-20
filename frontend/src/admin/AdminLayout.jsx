@@ -1,6 +1,6 @@
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Landmark, Inbox, LogOut, ShieldCheck } from 'lucide-react';
+import { Landmark, Inbox, LogOut, ShieldCheck, BarChart3, Users, Tags } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthContext';
 import { MODULE_META } from '../lib/format';
 
@@ -17,6 +17,7 @@ export default function AdminLayout() {
 
   const scope = staff?.moduleScope ?? [];
   const isGlobal = staff?.role === 'SUPER_ADMIN';
+  const canManage = staff?.role === 'ADMIN' || isGlobal;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -60,21 +61,17 @@ export default function AdminLayout() {
         </div>
 
         <nav className="border-t border-white/10" aria-label={t('admin.title')}>
-          <div className="mx-auto flex max-w-6xl gap-1 px-4">
-            <NavLink
-              to="/admin"
-              end
-              className={({ isActive }) =>
-                `inline-flex items-center gap-2 border-b-2 px-3 py-3 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'border-ecivil-green-400 text-white'
-                    : 'border-transparent text-slate-300 hover:text-white'
-                }`
-              }
-            >
-              <Inbox className="size-4" aria-hidden="true" />
-              {t('admin.inbox')}
-            </NavLink>
+          {/* Management tabs are hidden from AGENTs, who work requests rather than
+              run a module. The API refuses them regardless of what is rendered. */}
+          <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4">
+            <AdminTab to="/admin" end icon={Inbox} label={t('admin.inbox')} />
+            {canManage && (
+              <>
+                <AdminTab to="/admin/tableau" icon={BarChart3} label={t('admin.dash.tab')} />
+                <AdminTab to="/admin/personnel" icon={Users} label={t('admin.staff.tab')} />
+                <AdminTab to="/admin/services" icon={Tags} label={t('admin.services.tab')} />
+              </>
+            )}
           </div>
         </nav>
       </header>
@@ -88,6 +85,25 @@ export default function AdminLayout() {
         <Outlet />
       </main>
     </div>
+  );
+}
+
+function AdminTab({ to, end, icon: Icon, label }) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      className={({ isActive }) =>
+        `inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-3 text-sm font-medium transition-colors ${
+          isActive
+            ? 'border-ecivil-green-400 text-white'
+            : 'border-transparent text-slate-300 hover:text-white'
+        }`
+      }
+    >
+      <Icon className="size-4" aria-hidden="true" />
+      {label}
+    </NavLink>
   );
 }
 

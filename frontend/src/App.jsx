@@ -16,6 +16,9 @@ import AdminLayout from './admin/AdminLayout';
 import StaffLoginPage from './admin/StaffLoginPage';
 import AgentInbox from './admin/AgentInbox';
 import StaffRequestDetail from './admin/StaffRequestDetail';
+import AdminDashboard from './admin/AdminDashboard';
+import StaffManagement from './admin/StaffManagement';
+import ServiceManagement from './admin/ServiceManagement';
 
 export default function App() {
   return (
@@ -85,6 +88,33 @@ export default function App() {
       >
         <Route index element={<AgentInbox />} />
         <Route path="demandes/:id" element={<StaffRequestDetail />} />
+
+        {/* Running a module is not working requests: AGENTs are excluded here,
+            and the API enforces the same split independently. */}
+        <Route
+          path="tableau"
+          element={
+            <StaffRoute roles={['ADMIN', 'SUPER_ADMIN']}>
+              <AdminDashboard />
+            </StaffRoute>
+          }
+        />
+        <Route
+          path="personnel"
+          element={
+            <StaffRoute roles={['ADMIN', 'SUPER_ADMIN']}>
+              <StaffManagement />
+            </StaffRoute>
+          }
+        />
+        <Route
+          path="services"
+          element={
+            <StaffRoute roles={['ADMIN', 'SUPER_ADMIN']}>
+              <ServiceManagement />
+            </StaffRoute>
+          }
+        />
       </Route>
     </Routes>
   );
