@@ -11,48 +11,9 @@ import { env, isProduction } from '../src/config/env.js';
 import { logger } from '../src/utils/logger.js';
 import { hashPassword } from '../src/utils/password.js';
 import { Citizen, Service, User, OtpChallenge, Request } from '../src/models/index.js';
-import { MODULE_KEYS, ROLES } from '../src/constants/index.js';
 import { citizens } from './data/citizens.js';
 import { services } from './data/services.js';
-
-/**
- * Demo back-office accounts. Passwords are throwaway and printed on seed.
- *
- * One AGENT and one module ADMIN per module, plus a global SUPER_ADMIN — the
- * four-tier hierarchy (CLAUDE.md §4).
- */
-const modules = [
-  { key: MODULE_KEYS.IDENTITY, slug: 'identite', label: 'Identité & Voyage' },
-  { key: MODULE_KEYS.LIFE_EVENTS, slug: 'etatcivil', label: 'Événements de Vie' },
-  { key: MODULE_KEYS.MOBILITY, slug: 'transports', label: 'Mobilité Urbaine' },
-  { key: MODULE_KEYS.LAND, slug: 'domaines', label: 'Titres Fonciers' },
-];
-
-const demoUsers = [
-  ...modules.flatMap((m, i) => [
-    {
-      email: `agent.${m.slug}@ecivil.demo`,
-      fullName: `Agent ${m.label}`,
-      role: ROLES.AGENT,
-      moduleScope: [m.key],
-      password: `Demo!Agent${i + 1}`,
-    },
-    {
-      email: `admin.${m.slug}@ecivil.demo`,
-      fullName: `Admin ${m.label}`,
-      role: ROLES.ADMIN,
-      moduleScope: [m.key],
-      password: `Demo!Admin${i + 1}`,
-    },
-  ]),
-  {
-    email: 'superadmin@ecivil.demo',
-    fullName: 'Super-Administrateur eCivil',
-    role: ROLES.SUPER_ADMIN,
-    moduleScope: [],
-    password: 'Demo!Super1',
-  },
-];
+import { users as demoUsers } from './data/users.js';
 
 async function seed() {
   if (isProduction) {
@@ -100,8 +61,12 @@ function printSummary(insertedCitizens) {
       (c) => `    ${c.nina}  ${c.fullName.padEnd(22)}${c.isDiaspora ? '(diaspora)' : ''}`,
     ),
     '',
-    '  Back-office accounts (usable from Phase 4):',
-    ...demoUsers.map((u) => `    ${u.email.padEnd(32)}${u.password}`),
+    '  Back-office accounts (see seeds/data/users.js):',
+    ...demoUsers.map(
+      (u) =>
+        `    ${u.email.padEnd(32)}${u.password.padEnd(14)}${u.role.padEnd(12)}` +
+        `${u.moduleScope.length ? u.moduleScope.join(', ') : 'tous les pôles'}`,
+    ),
     '',
   ];
   console.log(lines.join('\n'));
