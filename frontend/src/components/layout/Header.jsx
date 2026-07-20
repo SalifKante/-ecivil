@@ -45,7 +45,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Navigation principale">
+        <nav className="hidden items-center gap-1 md:flex" aria-label={t('nav.main')}>
           {navItems.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end} className={navLinkClass}>
               {t(item.key)}
@@ -65,7 +65,8 @@ export default function Header() {
             type="button"
             onClick={() => setIsMenuOpen((open) => !open)}
             aria-expanded={isMenuOpen}
-            aria-label="Menu"
+            aria-controls="menu-mobile"
+            aria-label={t(isMenuOpen ? 'nav.closeMenu' : 'nav.openMenu')}
             className="rounded-md p-2 text-slate-600 hover:bg-slate-100 md:hidden"
           >
             {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -74,7 +75,11 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <nav className="border-t border-slate-200 px-4 py-2 md:hidden" aria-label="Navigation mobile">
+        <nav
+          id="menu-mobile"
+          className="border-t border-slate-200 px-4 py-2 md:hidden"
+          aria-label={t('nav.mobile')}
+        >
           {navItems.map((item) => (
             <NavLink
               key={item.to}

@@ -23,6 +23,7 @@ import { useAuth } from '../features/auth/AuthContext';
 import { formatXof, formatDate, formatDateTime } from '../lib/format';
 import { ModuleBadge } from './AdminLayout';
 import StatusBadge from './StatusBadge';
+import Loading from '../components/Loading';
 
 const SUPERVISOR_ROLES = ['ADMIN', 'SUPER_ADMIN'];
 
@@ -76,7 +77,7 @@ export default function StaffRequestDetail() {
     onError: showError,
   });
 
-  if (isPending) return <p className="text-sm text-slate-500">…</p>;
+  if (isPending) return <Loading />;
 
   if (isError || !request) {
     return (
@@ -317,6 +318,7 @@ function Row({ label, value, mono = false }) {
 function Attachments({ requestId, attachments }) {
   const { t } = useTranslation();
   const [opening, setOpening] = useState(null);
+  const [openError, setOpenError] = useState(null);
 
   if (!attachments?.length) {
     return <p className="text-sm text-slate-500">{t('wizard.noAttachments')}</p>;
@@ -324,35 +326,47 @@ function Attachments({ requestId, attachments }) {
 
   const open = async (attachmentId) => {
     setOpening(attachmentId);
+    setOpenError(null);
     try {
       const url = await fetchStaffAttachmentUrl(requestId, attachmentId);
       window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      // Previously try/finally with no catch: a failed link silently did nothing
+      // and the button simply un-disabled, which reads as "the app ignored me".
+      setOpenError(t([`adminErrors.${err.code}`, 'errors.UNKNOWN_ERROR']));
     } finally {
       setOpening(null);
     }
   };
 
   return (
-    <ul className="space-y-2">
-      {attachments.map((a) => (
-        <li
-          key={a._id}
-          className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2"
-        >
-          <span className="flex min-w-0 items-center gap-2 text-sm text-slate-700">
-            <Paperclip className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
-            <span className="truncate">{a.originalName}</span>
-          </span>
-          <button
-            type="button"
-            onClick={() => open(a._id)}
-            disabled={opening === a._id}
-            className="text-ecivil-green-700 shrink-0 text-xs font-medium hover:underline disabled:opacity-50"
+    <>
+      {openError && (
+        <p role="alert" className="text-ecivil-red-600 mb-2 text-sm">
+          {openError}
+        </p>
+      )}
+      <ul className="space-y-2">
+        {attachments.map((a) => (
+          <li
+            key={a._id}
+            className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2"
           >
-            {opening === a._id ? t('admin.detail.opening') : t('admin.detail.open')}
-          </button>
-        </li>
-      ))}
-    </ul>
+            <span className="flex min-w-0 items-center gap-2 text-sm text-slate-700">
+              <Paperclip className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+              <span className="truncate">{a.originalName}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => open(a._id)}
+              disabled={opening === a._id}
+              className="text-ecivil-green-700 shrink-0 rounded px-2 py-2 text-sm font-medium hover:underline disabled:opacity-50"
+            >
+              {opening === a._id ? t('admin.detail.opening') : t('admin.detail.open')}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

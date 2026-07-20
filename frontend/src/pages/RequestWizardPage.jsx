@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { fetchService } from '../features/services/servicesApi';
@@ -12,6 +12,7 @@ import {
   deleteAttachment,
 } from '../features/requests/requestsApi';
 import { formatXof, formatDate } from '../lib/format';
+import Loading from '../components/Loading';
 
 const STEPS = ['info', 'documents', 'review'];
 const DELIVERY_MODES = ['DIGITAL', 'HOME', 'PICKUP_POINT'];
@@ -30,7 +31,11 @@ export default function RequestWizardPage() {
   const fileInputRef = useRef(null);
   const draftRequested = useRef(false);
 
-  const { data: service } = useQuery({ queryKey: ['service', code], queryFn: () => fetchService(code) });
+  const {
+    data: service,
+    isPending: serviceLoading,
+    isError: serviceError,
+  } = useQuery({ queryKey: ['service', code], queryFn: () => fetchService(code) });
   const { data: citizen } = useQuery({ queryKey: ['me'], queryFn: fetchMe });
 
   // Create the draft as soon as we know the service, so uploads have somewhere to attach.
@@ -80,7 +85,28 @@ export default function RequestWizardPage() {
       setError(t([`authErrors.${err.code}`, `errors.${err.code}`, 'errors.UNKNOWN_ERROR'])),
   });
 
-  if (!service) return <div className="mx-auto max-w-2xl px-4 py-16 text-slate-500">…</div>;
+  if (serviceLoading) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16">
+        <Loading />
+      </div>
+    );
+  }
+
+  // Previously this branch caught the error case too, leaving anyone who mistyped
+  // the service code staring at a loading indicator forever, with no way out.
+  if (serviceError || !service) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16">
+        <p role="alert" className="bg-ecivil-red-100 text-ecivil-red-600 rounded-lg px-4 py-3 text-sm">
+          {t('wizard.serviceUnavailable')}
+        </p>
+        <Link to="/services" className="text-ecivil-green-700 mt-4 inline-block text-sm hover:underline">
+          {t('wizard.backToCatalog')}
+        </Link>
+      </div>
+    );
+  }
 
   const step = STEPS[stepIndex];
   const applicantName = citizen ? `${citizen.firstName} ${citizen.lastName}` : '';
@@ -247,23 +273,36 @@ function InfoStep({ citizen, applicantName, service, motif, setMotif, delivery, 
         ))}
       </select>
 
+      {/* Labelled, not placeholder-only: placeholder text vanishes on focus and is
+          not an accessible name (WCAG 3.3.2). */}
       {delivery.mode === 'HOME' && (
-        <input
-          type="text"
-          value={delivery.address}
-          onChange={(e) => setDelivery((d) => ({ ...d, address: e.target.value }))}
-          placeholder={t('wizard.deliveryAddress')}
-          className="focus:border-ecivil-green-600 mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none"
-        />
+        <>
+          <label htmlFor="delivery-address" className="mt-3 block text-sm font-medium text-slate-700">
+            {t('wizard.deliveryAddress')}
+          </label>
+          <input
+            id="delivery-address"
+            type="text"
+            autoComplete="street-address"
+            value={delivery.address}
+            onChange={(e) => setDelivery((d) => ({ ...d, address: e.target.value }))}
+            className="focus:border-ecivil-green-600 mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none"
+          />
+        </>
       )}
       {delivery.mode === 'PICKUP_POINT' && (
-        <input
-          type="text"
-          value={delivery.pickupPoint}
-          onChange={(e) => setDelivery((d) => ({ ...d, pickupPoint: e.target.value }))}
-          placeholder={t('wizard.pickupPoint')}
-          className="focus:border-ecivil-green-600 mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none"
-        />
+        <>
+          <label htmlFor="pickup-point" className="mt-3 block text-sm font-medium text-slate-700">
+            {t('wizard.pickupPoint')}
+          </label>
+          <input
+            id="pickup-point"
+            type="text"
+            value={delivery.pickupPoint}
+            onChange={(e) => setDelivery((d) => ({ ...d, pickupPoint: e.target.value }))}
+            className="focus:border-ecivil-green-600 mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none"
+          />
+        </>
       )}
     </div>
   );

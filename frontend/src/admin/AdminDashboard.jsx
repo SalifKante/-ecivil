@@ -4,6 +4,7 @@ import { fetchStats } from '../features/admin/adminApi';
 import { useAuth } from '../features/auth/AuthContext';
 import { formatXof, MODULE_SERIES_COLOR, STATUS_COLOR } from '../lib/format';
 import { StatTile, DailyBars, BreakdownBars } from './charts';
+import Loading from '../components/Loading';
 
 /**
  * One dashboard, two readings. A module ADMIN gets its own module; a SUPER_ADMIN
@@ -22,7 +23,7 @@ export default function AdminDashboard() {
     queryFn: fetchStats,
   });
 
-  if (isPending) return <p className="text-sm text-slate-500">…</p>;
+  if (isPending) return <Loading />;
 
   if (isError || !stats) {
     return (

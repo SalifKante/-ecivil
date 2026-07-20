@@ -20,6 +20,7 @@ import {
   settlePayment,
 } from '../features/payments/paymentsApi';
 import { formatXof, PROVIDER_META } from '../lib/format';
+import Loading from '../components/Loading';
 
 /** Provider order in the picker — mobile money first, it is how most citizens pay. */
 const PROVIDER_ORDER = ['ORANGE_MONEY', 'WAVE', 'CARD'];
@@ -82,7 +83,11 @@ export default function PaymentPage() {
   });
 
   if (isPending) {
-    return <div className="mx-auto max-w-2xl px-4 py-16 text-slate-500">…</div>;
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16">
+        <Loading />
+      </div>
+    );
   }
 
   if (isError || !request) {

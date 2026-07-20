@@ -4,15 +4,24 @@
     "tagline": "Plateforme Unifiée de la Citoyenneté Numérique",
     "republic": "République du Mali"
   },
+  "common": {
+    "loading": "Chargement en cours…",
+    "skipToContent": "Aller au contenu principal"
+  },
   "prototype": {
-    "banner": "Prototype de démonstration — données fictives, aucune valeur légale."
+    "banner": "Prototype de démonstration — données fictives, aucune valeur légale.",
+    "label": "Avertissement"
   },
   "nav": {
     "home": "Accueil",
     "services": "Services",
     "tracking": "Suivi",
     "verify": "Vérifier un document",
-    "login": "Se connecter"
+    "login": "Se connecter",
+    "main": "Navigation principale",
+    "mobile": "Navigation mobile",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
   },
   "home": {
     "title": "Vos démarches administratives, en ligne",
@@ -153,6 +162,8 @@
     "submit": "Soumettre la demande",
     "submitting": "Soumission…",
     "createError": "Impossible de créer la demande. Réessayez.",
+    "serviceUnavailable": "Cette démarche est introuvable ou momentanément indisponible.",
+    "backToCatalog": "Retour aux services",
     "submitSuccess": "Demande {{reference}} soumise. Vous allez être redirigé vers le paiement.",
     "specimenReminder": "Prototype : les documents produits seront des spécimens sans valeur légale."
   },
@@ -265,7 +276,8 @@
     "DELIVERED": "Délivrée"
   },
   "admin": {
-    "title": "Back-office eCivil",
+    "title": "Espace agent eCivil",
+    "navLabel": "Navigation de l'espace agent",
     "inbox": "Demandes à traiter",
     "inboxSubtitle": "Les demandes de votre pôle, de la plus récente à la plus ancienne.",
     "prototypeNotice": "Prototype de démonstration — données fictives, aucune décision n'a de valeur légale.",
@@ -334,6 +346,7 @@
       "passwordHint": "10 caractères minimum. À communiquer à l'agent, qui devra le changer.",
       "role": "Rôle",
       "scope": "Pôles rattachés",
+      "empty": "Aucun compte à afficher pour le moment.",
       "inactive": "Désactivé",
       "deactivate": "Désactiver",
       "reactivate": "Réactiver",
@@ -355,6 +368,7 @@
       "processingDays": "Délai (jours)",
       "active": "Service actif",
       "inactive": "Inactif",
+      "empty": "Aucun service dans votre périmètre pour le moment.",
       "tariffNote": "Toute modification de tarif est enregistrée dans le journal d'audit, avec l'ancienne et la nouvelle valeur."
     },
     "detail": {

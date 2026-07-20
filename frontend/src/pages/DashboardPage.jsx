@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { LogOut, ArrowRight } from 'lucide-react';
 import { fetchMe } from '../features/auth/authApi';
 import { useAuth } from '../features/auth/AuthContext';
+import Loading from '../components/Loading';
 
 function formatDate(value) {
   return value ? new Date(value).toLocaleDateString('fr-FR') : '—';
@@ -58,7 +59,7 @@ export default function DashboardPage() {
         <h2 className="font-semibold text-slate-900">{t('dashboard.identityTitle')}</h2>
         <p className="mt-1 text-sm text-slate-600">{t('dashboard.identitySubtitle')}</p>
 
-        {isPending && <p className="mt-6 text-sm text-slate-500">…</p>}
+        {isPending && <Loading className="mt-6" />}
         {isError && (
           <p role="alert" className="text-ecivil-red-600 mt-6 text-sm">
             {t('errors.UNKNOWN_ERROR')}

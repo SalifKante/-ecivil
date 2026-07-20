@@ -7,6 +7,7 @@ import { fetchStaffRequests } from '../features/staffRequests/staffRequestsApi';
 import { formatXof, formatDate } from '../lib/format';
 import { ModuleBadge } from './AdminLayout';
 import StatusBadge from './StatusBadge';
+import Loading from '../components/Loading';
 
 /** Statuses an agent can act on, in the order a file moves through them. */
 const STATUS_FILTERS = ['PAID', 'UNDER_REVIEW', 'NEEDS_INFO', 'APPROVED', 'REJECTED'];
@@ -93,7 +94,7 @@ export default function AgentInbox() {
       )}
 
       {isPending ? (
-        <p className="mt-8 text-sm text-slate-500">…</p>
+        <Loading className="mt-8" />
       ) : data?.requests.length === 0 ? (
         <EmptyState />
       ) : (

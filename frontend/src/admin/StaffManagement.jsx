@@ -9,6 +9,7 @@ import {
 } from '../features/admin/adminApi';
 import { useAuth } from '../features/auth/AuthContext';
 import { formatDate } from '../lib/format';
+import Loading from '../components/Loading';
 
 const ALL_MODULES = ['identity', 'lifeEvents', 'mobility', 'land'];
 
@@ -25,7 +26,9 @@ export default function StaffManagement() {
   // options offered. The server enforces this regardless of what the form sends.
   const grantable = isSuper ? ALL_MODULES : (staff?.moduleScope ?? []);
 
-  const { data: users, isPending } = useQuery({
+  // `isError` is not optional: without it a failed fetch leaves `users` undefined
+  // and the .map() below throws, white-screening the page with no error boundary.
+  const { data: users, isPending, isError } = useQuery({
     queryKey: ['staffUsers'],
     queryFn: () => fetchStaffUsers(),
   });
@@ -92,7 +95,15 @@ export default function StaffManagement() {
       )}
 
       {isPending ? (
-        <p className="mt-8 text-sm text-slate-500">…</p>
+        <Loading className="mt-8" />
+      ) : isError ? (
+        <p role="alert" className="bg-ecivil-red-100 text-ecivil-red-600 mt-8 rounded-lg px-4 py-3 text-sm">
+          {t('errors.UNKNOWN_ERROR')}
+        </p>
+      ) : users.length === 0 ? (
+        <p className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white py-12 text-center text-sm text-slate-500">
+          {t('admin.staff.empty')}
+        </p>
       ) : (
         <ul className="mt-6 space-y-2">
           {users.map((u) => (

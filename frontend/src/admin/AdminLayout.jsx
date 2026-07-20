@@ -21,6 +21,13 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-slate-100">
+      <a
+        href="#contenu-admin"
+        className="focus:bg-ecivil-green-600 sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:px-4 focus:py-2 focus:text-white"
+      >
+        {t('common.skipToContent')}
+      </a>
+
       <header className="bg-slate-900 text-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <Link to="/admin" className="flex items-center gap-2.5">
@@ -60,7 +67,7 @@ export default function AdminLayout() {
           </div>
         </div>
 
-        <nav className="border-t border-white/10" aria-label={t('admin.title')}>
+        <nav className="border-t border-white/10" aria-label={t('admin.navLabel')}>
           {/* Management tabs are hidden from AGENTs, who work requests rather than
               run a module. The API refuses them regardless of what is rendered. */}
           <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4">
@@ -81,7 +88,7 @@ export default function AdminLayout() {
         {t('admin.prototypeNotice')}
       </p>
 
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main id="contenu-admin" tabIndex={-1} className="mx-auto max-w-6xl px-4 py-8">
         <Outlet />
       </main>
     </div>

@@ -33,7 +33,8 @@ export default function StaffLoginPage() {
   };
 
   return (
-    <div className="grid min-h-screen place-items-center bg-slate-900 px-4 py-10">
+    // A standalone route outside AdminLayout, so it carries its own landmark.
+    <main className="grid min-h-screen place-items-center bg-slate-900 px-4 py-10">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center gap-2.5 text-white">
           <span
@@ -108,6 +109,6 @@ export default function StaffLoginPage() {
           {t('admin.login.backToSite')}
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

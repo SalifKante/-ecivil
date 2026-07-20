@@ -13,6 +13,7 @@ import {
 import { fetchRequest, fetchDocumentUrl } from '../features/requests/requestsApi';
 import { formatXof, formatDate, formatDateTime, MODULE_META } from '../lib/format';
 import StatusPill from '../components/StatusPill';
+import Loading from '../components/Loading';
 
 /** Statuses where an issued document exists and can be downloaded. */
 const DOWNLOADABLE = ['ISSUED', 'DELIVERED'];
@@ -26,7 +27,13 @@ export default function RequestTrackingPage() {
     queryFn: () => fetchRequest(id),
   });
 
-  if (isPending) return <div className="mx-auto max-w-2xl px-4 py-16 text-slate-500">…</div>;
+  if (isPending) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16">
+        <Loading />
+      </div>
+    );
+  }
 
   if (isError || !request) {
     return (
@@ -81,8 +88,8 @@ export default function RequestTrackingPage() {
           <Row label={t('tracking.submittedAt')} value={formatDate(request.submittedAt)} />
           {service?.processingDays != null && (
             <Row
-              label={t('catalog.processingDays', { count: service.processingDays })}
-              value={t('tracking.indicative')}
+              label={t('tracking.indicative')}
+              value={t('catalog.processingDays', { count: service.processingDays })}
             />
           )}
         </dl>

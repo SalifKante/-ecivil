@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { ShieldCheck, ShieldX, ScanLine, Loader2, TriangleAlert } from 'lucide-react';
+import { ShieldCheck, ShieldX, ScanLine, TriangleAlert } from 'lucide-react';
 import { verifyDocument } from '../features/documents/documentsApi';
 import { formatDateTime } from '../lib/format';
+import Loading from '../components/Loading';
 
 /**
  * Public QR verification. No session: anyone holding a document can check it,
@@ -16,7 +17,7 @@ export default function VerifyPage() {
   const { t } = useTranslation();
   const [input, setInput] = useState('');
 
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError, error: queryError } = useQuery({
     queryKey: ['verify', token],
     queryFn: () => verifyDocument(token),
     enabled: Boolean(token),
@@ -66,16 +67,16 @@ export default function VerifyPage() {
         </form>
       )}
 
-      {token && isPending && (
-        <p className="mt-8 flex items-center gap-2 text-sm text-slate-500">
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-          {t('verify.checking')}
-        </p>
-      )}
+      {token && isPending && <Loading className="mt-8" label={t('verify.checking')} />}
 
+      {/*
+        This page is public — scanned from a QR code by someone with no account —
+        so it is the screen where a wrong diagnosis is most likely to be believed.
+        Map the actual error code instead of blaming the reader's network.
+      */}
       {token && isError && (
         <p role="alert" className="bg-ecivil-red-100 text-ecivil-red-600 mt-8 rounded-lg px-4 py-3 text-sm">
-          {t('errors.NETWORK_ERROR')}
+          {t([`errors.${queryError?.code}`, 'errors.UNKNOWN_ERROR'])}
         </p>
       )}
 
@@ -104,13 +105,16 @@ function Result({ result, onReset }) {
             <ShieldX className="text-ecivil-red-600 size-8 shrink-0" aria-hidden="true" />
           )}
           <div>
-            <p
+            {/* The verdict is the whole point of the page: a heading so it can be
+                navigated to, and role="status" so it is actually announced. */}
+            <h2
+              role="status"
               className={`text-lg font-semibold ${
                 valid ? 'text-ecivil-green-700' : 'text-ecivil-red-600'
               }`}
             >
               {t(valid ? 'verify.valid' : 'verify.invalid')}
-            </p>
+            </h2>
             <p className={`text-sm ${valid ? 'text-ecivil-green-700' : 'text-ecivil-red-600'}`}>
               {t(`verify.reasons.${reason ?? 'VALID'}`)}
             </p>

@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchServices } from '../features/services/servicesApi';
 import { useAuth } from '../features/auth/AuthContext';
 import { formatXof, MODULE_META } from '../lib/format';
+import Loading from '../components/Loading';
 
 const MODULE_KEYS = ['identity', 'lifeEvents', 'mobility', 'land'];
 
@@ -97,7 +98,7 @@ export default function ServicesPage() {
         })}
       </div>
 
-      {isPending && <p className="mt-8 text-sm text-slate-500">…</p>}
+      {isPending && <Loading className="mt-8" />}
       {isError && (
         <p role="alert" className="text-ecivil-red-600 mt-8 text-sm">
           {t('errors.UNKNOWN_ERROR')}
@@ -127,7 +128,9 @@ function FilterChip({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+      // Without aria-pressed the selected filter is signalled by colour alone.
+      aria-pressed={active}
+      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
         active
           ? 'bg-ecivil-green-600 text-white'
           : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'

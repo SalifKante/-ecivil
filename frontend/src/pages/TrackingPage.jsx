@@ -5,6 +5,7 @@ import { FileSearch, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { fetchRequests } from '../features/requests/requestsApi';
 import { formatDate, MODULE_META } from '../lib/format';
 import StatusPill from '../components/StatusPill';
+import Loading from '../components/Loading';
 
 export default function TrackingPage() {
   const { t } = useTranslation();
@@ -22,7 +23,10 @@ export default function TrackingPage() {
       <p className="mt-1 text-slate-600">{t('tracking.subtitle')}</p>
 
       {justSubmitted && (
-        <p className="bg-ecivil-green-50 text-ecivil-green-700 mt-6 flex items-center gap-2 rounded-lg px-4 py-3 text-sm">
+        <p
+          role="status"
+          className="bg-ecivil-green-50 text-ecivil-green-700 mt-6 flex items-center gap-2 rounded-lg px-4 py-3 text-sm"
+        >
           <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
           {t('tracking.justSubmitted', { reference: justSubmitted })}
         </p>
@@ -35,7 +39,7 @@ export default function TrackingPage() {
       )}
 
       {isPending ? (
-        <p className="mt-8 text-sm text-slate-500">…</p>
+        <Loading className="mt-8" />
       ) : requests.length === 0 ? (
         <div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white py-16 text-center">
           <FileSearch className="mx-auto size-8 text-slate-300" aria-hidden="true" />
